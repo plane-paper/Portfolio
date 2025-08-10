@@ -588,7 +588,7 @@ const Portfolio = () => {
                     formData.append('email', document.getElementById('email').value);
                     formData.append('message', document.getElementById('message').value);
                     
-                    fetch('https://formsubmit.co/r38su@uwaterloo.ca', {
+                    fetch('https://formsubmit.co/1a4182dd618b3c2d51cda6e7299d1f77 ', {
                       method: 'POST',
                       body: formData
                     }).then(() => {
