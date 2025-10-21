@@ -285,6 +285,19 @@ const Portfolio = () => {
   // Project data
   const projects = [
     {
+      title: "SnapLearn",
+      images: ["images/pic16.png", "images/pic17.png", "images/pic18.png"],
+      details: [
+        "Built an app with Next.js and Flask to take in a textbook uploaded by the user using PyMuPDF and the time they plan t  study every day, and regenerate the topics the textbook covered into a curriculum that fits the user's schedule using NLP techniques.",
+        "Designed a Python algorithm that takes in any variety of topics, and uses NLP techniques, as well as cosine similarity search, to determine their dependency relationship in learning, and creates a directed acyclic graph.",
+        "Trained a small-sized language model to estimate the time needed for an average person to study a certain topic with all pre-requisite knowledge acquired.",
+        "Developed a greedy algorithm to fit the course content into the user’s schedule, while also balancing it with practice sessions. Then used an LLM to generate the course content with the specified length.",
+        "Used Auth0 to implement storage of user login and authorization, and used PostgreSQL to store user data, including progress, course information, etc.",
+        "Used Docker to containerize the entire application for easy deployment.",
+        '<a href="https://github.com/plane-paper/SnapLearn" class="text-blue-300 hover:text-blue-200 underline">Click me for GitHub link</a>' 
+      ]
+    },
+    {
       title: "QuickSilver",
       images: ["images/pic12.jpg"],
       details: [
