@@ -808,8 +808,25 @@ const Portfolio = () => {
             isArticleVisible || isTransitioning ? 'opacity-0 transform scale-95 blur-sm pointer-events-none' : 'opacity-100'
           }`}
         >
-          <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border border-white flex items-center justify-center mx-auto mb-8">
-            <span className="text-2xl md:text-3xl text-white">⌨</span>
+          <div className="w-24 h-24 md:w-28 md:h-28 rounded-full border border-white flex items-center justify-center mx-auto mb-8 overflow-hidden">
+            <img
+              src="/images/logo.jpg"
+              alt="Site logo"
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                // hide broken image and reveal inline fallback
+                e.currentTarget.style.display = 'none';
+                const fallback = e.currentTarget.nextElementSibling;
+                if (fallback) fallback.style.display = 'flex';
+              }}
+            />
+            <span
+              aria-hidden="true"
+              style={{ display: 'none' }}
+              className="text-3xl md:text-5xl text-white leading-none items-center justify-center"
+            >
+              🛩️
+            </span>
           </div>
           
           <div className="border-t border-b border-white py-8 mb-8 max-w-2xl">
