@@ -266,6 +266,11 @@ const Portfolio = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [visitorCount, setVisitorCount] = useState(0);
 
+  // Project navigation helpers
+  const [searchQuery, setSearchQuery] = useState('');
+  const [alphaFilter, setAlphaFilter] = useState('All');
+
+
   // Loading screen effect
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -412,6 +417,17 @@ const Portfolio = () => {
     }
   ];
 
+  const alphabet = ['All', ...Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i))];
+
+  const filteredProjects = projects
+    .filter(p => {
+      const q = searchQuery.trim().toLowerCase();
+      if (alphaFilter !== 'All' && p.title[0].toUpperCase() !== alphaFilter) return false;
+      if (!q) return true;
+      const hay = (p.title + ' ' + (p.details || []).join(' ')).toLowerCase();
+      return hay.includes(q);
+    });
+
   // Main screen navigation (with animation)
   const handleMainNavClick = (view) => {
     setIsTransitioning(true);
@@ -500,16 +516,56 @@ const Portfolio = () => {
             <h2 className="text-2xl font-semibold uppercase tracking-wide mb-6 text-white border-b border-white pb-2">
               Projects
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {projects.map((project, index) => (
-                <ProjectTile 
-                  key={index} 
-                  project={project} 
-                  index={index}
-                  onProjectSelect={setSelectedProject}
-                  isCompact={false}
+
+            {/* Search + Alphabet filter */}
+            <div className="mb-6 space-y-3">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                <input
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search projects or keywords..."
+                  className="w-full md:w-2/3 px-4 py-3 bg-transparent border border-white rounded text-white placeholder-white/50 focus:outline-none"
                 />
-              ))}
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => { setSearchQuery(''); setAlphaFilter('All'); }}
+                    className="px-3 py-2 border border-white rounded text-white hover:bg-white/10"
+                  >
+                    Clear
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {alphabet.map(letter => (
+                  <button
+                    key={letter}
+                    onClick={() => setAlphaFilter(letter)}
+                    className={`px-2 py-1 text-sm rounded ${
+                      alphaFilter === letter ? 'bg-white/20' : 'bg-white/5 hover:bg-white/10'
+                    }`}
+                  >
+                    {letter}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Filtered projects grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {filteredProjects.length === 0 ? (
+                <div className="text-white/80">No projects match your search or filter.</div>
+              ) : (
+                filteredProjects.map((project) => (
+                  <ProjectTile
+                    key={project.title}
+                    project={project}
+                    index={projects.indexOf(project)} /* keep original index for selection */
+                    onProjectSelect={setSelectedProject}
+                    isCompact={false}
+                  />
+                ))
+              )}
             </div>
           </div>
         );
