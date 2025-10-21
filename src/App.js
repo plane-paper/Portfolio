@@ -693,15 +693,33 @@ const Portfolio = () => {
               </div>
             </div>
             
-            <div className="flex gap-4 mt-8">
-              <a href="#" className="w-12 h-12 rounded-full border border-white flex items-center justify-center hover:bg-white/10 transition-colors">
-                <span className="text-white text-sm">D</span>
+              <div className="flex gap-4 mt-8">
+              {/* Instagram */}
+              <a
+                href="https://www.instagram.com/plane_paper_rick/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="w-12 h-12 rounded-full border border-white flex items-center justify-center hover:bg-white/10 transition-colors"
+              >
+                <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" strokeWidth="1.5" />
+                  <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.5" fill="none" />
+                  <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" />
+                </svg>
               </a>
-              <a href="https://www.instagram.com/plane_paper_rick/" className="w-12 h-12 rounded-full border border-white flex items-center justify-center hover:bg-white/10 transition-colors">
-                <span className="text-white text-sm">IG</span>
-              </a>
-              <a href="https://github.com/plane-paper" className="w-12 h-12 rounded-full border border-white flex items-center justify-center hover:bg-white/10 transition-colors">
-                <span className="text-white text-sm">GH</span>
+
+              {/* GitHub */}
+              <a
+                href="https://github.com/plane-paper"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub"
+                className="w-12 h-12 rounded-full border border-white flex items-center justify-center hover:bg-white/10 transition-colors"
+              >
+                <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.38-3.88-1.38-.53-1.36-1.3-1.72-1.3-1.72-1.06-.72.08-.71.08-.71 1.17.08 1.78 1.2 1.78 1.2 1.04 1.78 2.73 1.26 3.4.96.11-.75.41-1.26.74-1.55-2.56-.29-5.26-1.28-5.26-5.7 0-1.26.45-2.29 1.2-3.1-.12-.29-.52-1.46.11-3.04 0 0 .98-.31 3.2 1.18.93-.26 1.92-.39 2.91-.39.99 0 1.98.13 2.91.39 2.22-1.49 3.2-1.18 3.2-1.18.63 1.58.23 2.75.11 3.04.75.81 1.2 1.84 1.2 3.1 0 4.43-2.71 5.4-5.29 5.69.42.36.78 1.08.78 2.18 0 1.57-.01 2.83-.01 3.21 0 .31.21.67.8.56C20.71 21.39 24 17.08 24 12c0-6.27-5.23-11.5-12-11.5z" />
+                </svg>
               </a>
             </div>
           </div>
