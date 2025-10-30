@@ -432,12 +432,13 @@ const Portfolio = () => {
   const handleMainNavClick = (view) => {
     setIsTransitioning(true);
     
-    // Start the animation
+    setCurrentView(view);
+    setIsArticleVisible(true);
+    setIsTransitioning(true);
+
     setTimeout(() => {
-      setCurrentView(view);
-      setIsArticleVisible(true);
       setIsTransitioning(false);
-    }, 800); // Animation duration
+    }, 300); // Match with CSS animation duration
   };
 
   // Top navigation (simple fade transition)
@@ -746,7 +747,7 @@ const Portfolio = () => {
       {/* Top Navigation Bar */}
       {(isArticleVisible || isTransitioning) && (
         <nav className={`fixed top-0 left-0 right-0 z-50 bg-gray-900/90 backdrop-blur-sm border-b border-white/20 transition-all duration-800 ${
-          isTransitioning ? 'animate-slideFromCenter' : ''
+          isTransitioning ? 'animate-slideFromTop' : ''
         }`}>
           <div className="container mx-auto px-6 py-4">
             <div className="flex items-center justify-between">
@@ -961,30 +962,25 @@ const Portfolio = () => {
           }
         }
         
+       /* softened header transition so it doesn't jump to the center */
         @keyframes moveToTop {
-          0% {
+          from {
             transform: translateY(0) scale(1);
-            position: static;
+            opacity: 1;
           }
-          50% {
-            transform: translateY(-50vh) scale(0.9);
-          }
-          100% {
-            transform: translateY(-80vh) scale(0.8);
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            margin-left: -200px;
-            z-index: 1000;
+          to {
+            transform: translateY(-8px) scale(0.985);
+            opacity: 0.65;
           }
         }
         
-        @keyframes slideFromCenter {
-          0% {
-            transform: translateY(50vh) scale(0.8);
+        /* nav should slide/fade in from the top, not from the center of the page */
+        @keyframes slideFromTop {
+          from {
+            transform: translateY(-18px) scale(0.995);
             opacity: 0;
           }
-          100% {
+          to {
             transform: translateY(0) scale(1);
             opacity: 1;
           }
@@ -998,8 +994,8 @@ const Portfolio = () => {
           animation: moveToTop 0.8s ease-in-out forwards;
         }
         
-        .animate-slideFromCenter {
-          animation: slideFromCenter 0.8s ease-out forwards;
+        .animate-slideFromTop {
+          animation: slideFromTop 0.8s ease-out forwards;
         }
       `}</style>
     </div>
