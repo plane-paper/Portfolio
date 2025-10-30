@@ -283,8 +283,20 @@ const Portfolio = () => {
   // Visitor count effect - using in-memory storage instead of localStorage
   useEffect(() => {
     // Simulate visitor count (in a real app, this would come from a backend)
-    const randomCount = Math.floor(Math.random() * 1000) + 500;
+    const today = new Date().toDateString();
+    const storedDate = localStorage.getItem('visitorDate');
+    const storedCount = localStorage.getItem('visitorCount');
+
+    let randomCount;
+    if (storedDate === today) {
+      randomCount = storedCount ? parseInt(storedCount) : Math.floor(Math.random() * 1000) + 500;
+    } else {
+      randomCount = storedCount ? Math.max(parseInt(storedCount) + 1, Math.floor(Math.random() * 1000) + 500) : Math.floor(Math.random() * 1000) + 500;
+      localStorage.setItem('visitorDate', today);
+    }
+
     setVisitorCount(randomCount);
+    localStorage.setItem('visitorCount', randomCount);
   }, []);
 
   // Project data
