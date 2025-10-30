@@ -499,7 +499,7 @@ const Portfolio = () => {
         if (selectedProject !== null) {
           return (
             <div className="flex h-full">
-              <div className="w-24 bg-gray-900/50 backdrop-blur-sm border-r border-white/20 p-4 overflow-y-auto flex-shrink-0">
+              <div className="w-24 bg-gray-900/50 backdrop-blur-sm border-r border-white/20 p-4 overflow-y-auto flex-shrink-0 overflow-x-hidden no-scrollbar">
                 {projects.map((project, index) => (
                   <ProjectTile 
                     key={index} 
