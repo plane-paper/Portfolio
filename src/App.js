@@ -181,7 +181,7 @@ const ProjectDetail = ({ project, onClose }) => {
   const githubLink = getGitHubLink();
 
   return (
-    <div className="h-full p-8 overflow-y-auto">
+    <div className="h-full p-8 overflow-y-auto no-scrollbar">
       <div className="max-w-4xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           {githubLink ? (
@@ -913,7 +913,7 @@ const Portfolio = () => {
             }}
           >
             {currentView !== 'work' || selectedProject === null ? (
-              <div className="container mx-auto px-6 md:px-12 py-12 max-w-4xl h-full overflow-y-auto">
+              <div className="container mx-auto px-6 md:px-12 py-12 max-w-4xl h-full overflow-y-auto no-scrollbar">
                 <div className="animate-fadeIn">
                   {renderArticleContent()}
                 </div>
@@ -996,6 +996,16 @@ const Portfolio = () => {
         
         .animate-slideFromTop {
           animation: slideFromTop 0.8s ease-out forwards;
+        }
+
+        .no-scrollbar {
+          -ms-overflow-style: none;  /* IE and Edge */
+          scrollbar-width: none;  /* Firefox */
+        }
+        .no-scrollbar::-webkit-scrollbar {
+          width: 0;  /* Safari and Chrome */
+          height: 0;
+          display: none;  /* Chrome, Safari, Opera*/
         }
       `}</style>
     </div>
