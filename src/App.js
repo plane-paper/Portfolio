@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Loading Screen Component
 const LoadingScreen = () => {
@@ -7,7 +8,6 @@ const LoadingScreen = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [charIndex, setCharIndex] = useState(0);
-  const [isFadingOut, setIsFadingOut] = useState(false);
 
   useEffect(() => {
     const fullText = 'Richard Su';
@@ -19,40 +19,46 @@ const LoadingScreen = () => {
           setLoadingText(fullText.substring(0, charIndex + 1));
           setCharIndex(prev => prev + 1);
         } else {
-          // Wait for 1 second, then start deleting
-          setTimeout(() => setIsDeleting(true), 1000);
+          setTimeout(() => setIsDeleting(true), 300);
         }
       } else {
         // Deleting phase
         if (loadingText.length > 0) {
           setLoadingText(prev => prev.substring(0, prev.length - 1));
         } else {
-          // Start fade out transition
-          setIsFadingOut(true);
-          setTimeout(() => setIsComplete(true), 500); // Fade out duration
+          // Complete
+          setIsComplete(true);
+          setCharIndex(fullText.length); // Ensure all characters are displayed immediately
         }
       }
     };
 
-    const speed = isDeleting ? 100 : 150;
+    // faster typing & deleting speeds
+    const speed = isDeleting ? 60 : 40;
     const timer = setTimeout(typeText, speed);
 
     return () => clearTimeout(timer);
   }, [charIndex, isDeleting, loadingText]);
 
-  if (isComplete) return null;
+  if (isComplete) {
+    // Transition to the main content immediately
+    return <div className="fixed inset-0 bg-gray-900" />;
+  }
 
   return (
-    <div className={`fixed inset-0 bg-gray-900 flex items-center justify-center z-50 transition-opacity duration-500 ${
-      isFadingOut ? 'opacity-0' : 'opacity-100'
-    }`}>
+    <motion.div 
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      className="fixed inset-0 bg-gray-900 flex items-center justify-center z-50"
+    >
       <div className="text-center">
         <h1 className="text-4xl md:text-6xl font-light text-white uppercase tracking-wider">
           {loadingText}
           <span className="animate-pulse">|</span>
         </h1>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
@@ -275,14 +281,13 @@ const Portfolio = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 5000); // Extended to accommodate the fade out transition
+    }, 1400); // Reduced from 5000 to 4000
 
     return () => clearTimeout(timer);
   }, []);
 
-  // Visitor count effect - using in-memory storage instead of localStorage
+  // Visitor count effect
   useEffect(() => {
-    // Simulate visitor count (in a real app, this would come from a backend)
     const today = new Date().toDateString();
     const storedDate = localStorage.getItem('visitorDate');
     const storedCount = localStorage.getItem('visitorCount');
@@ -308,7 +313,7 @@ const Portfolio = () => {
         "Built an app with Next.js and Flask to take in a textbook uploaded by the user using PyMuPDF and the time they plan t  study every day, and regenerate the topics the textbook covered into a curriculum that fits the user's schedule using NLP techniques.",
         "Designed a Python algorithm that takes in any variety of topics, and uses NLP techniques, as well as cosine similarity search, to determine their dependency relationship in learning, and creates a directed acyclic graph.",
         "Trained a small-sized language model to estimate the time needed for an average person to study a certain topic with all pre-requisite knowledge acquired.",
-        "Developed a greedy algorithm to fit the course content into the user’s schedule, while also balancing it with practice sessions. Then used an LLM to generate the course content with the specified length.",
+        "Developed a greedy algorithm to fit the course content into the user's schedule, while also balancing it with practice sessions. Then used an LLM to generate the course content with the specified length.",
         "Used Auth0 to implement storage of user login and authorization, and used PostgreSQL to store user data, including progress, course information, etc.",
         "Used Docker to containerize the entire application for easy deployment.",
         '<a href="https://github.com/plane-paper/SnapLearn" class="text-blue-300 hover:text-blue-200 underline">Click me for GitHub link</a>' 
@@ -450,15 +455,15 @@ const Portfolio = () => {
 
     setTimeout(() => {
       setIsTransitioning(false);
-    }, 300); // Match with CSS animation duration
+    }, 300);
   };
 
   // Top navigation (simple fade transition)
   const handleTopNavClick = (view) => {
-    if (view === currentView) return; // Don't transition if already on this view
+    if (view === currentView) return;
     
     setCurrentView(view);
-    setSelectedProject(null); // Reset project selection when changing views
+    setSelectedProject(null);
   };
 
   const handleClose = () => {
@@ -583,7 +588,7 @@ const Portfolio = () => {
                   <ProjectTile
                     key={project.title}
                     project={project}
-                    index={projects.indexOf(project)} /* keep original index for selection */
+                    index={projects.indexOf(project)}
                     onProjectSelect={setSelectedProject}
                     isCompact={false}
                   />
@@ -706,8 +711,7 @@ const Portfolio = () => {
               </div>
             </div>
             
-              <div className="flex gap-4 mt-8">
-              {/* Instagram */}
+            <div className="flex gap-4 mt-8">
               <a
                 href="https://www.instagram.com/plane_paper_rick/"
                 target="_blank"
@@ -722,7 +726,6 @@ const Portfolio = () => {
                 </svg>
               </a>
 
-              {/* GitHub */}
               <a
                 href="https://github.com/plane-paper"
                 target="_blank"
@@ -745,279 +748,382 @@ const Portfolio = () => {
 
   return (
     <>
-      {/* Persistent Background Layer - Always Present */}
       <div className="fixed inset-0 bg-gray-900 z-0" />
       
-      {/* Loading Screen */}
-      {isLoading && <LoadingScreen />}
+      <AnimatePresence>
+        {isLoading && <LoadingScreen />}
+      </AnimatePresence>
       
-      {/* Main App */}
-      <div className={`min-h-screen text-white relative overflow-hidden transition-opacity duration-1000 ${
-        isLoading ? 'opacity-0' : 'opacity-100'
-      }`} style={{ fontFamily: "'Source Sans Pro', sans-serif" }}>
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isLoading ? 0 : 1 }}
+        transition={{ duration: 1, delay: 0.5 }}
+        className="min-h-screen text-white relative overflow-hidden"
+        style={{ fontFamily: "'Source Sans Pro', sans-serif" }}
+      >
       
-      {/* Top Navigation Bar */}
-      {(isArticleVisible || isTransitioning) && (
-        <nav className={`fixed top-0 left-0 right-0 z-50 bg-gray-900/90 backdrop-blur-sm border-b border-white/20 transition-all duration-800 ${
-          isTransitioning ? 'animate-slideFromTop' : ''
-        }`}>
-          <div className="container mx-auto px-6 py-4">
-            <div className="flex items-center justify-between">
-              <button 
-                onClick={handleClose}
-                className="text-lg font-semibold tracking-wide hover:text-white/80 transition-colors cursor-pointer"
-              >
-                Richard Su
-              </button>
-              <div className="hidden md:flex items-center space-x-1 text-sm">
+      <AnimatePresence>
+        {(isArticleVisible || isTransitioning) && (
+          <motion.nav
+            initial={{ y: -100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -100, opacity: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="fixed top-0 left-0 right-0 z-50 bg-gray-900/90 backdrop-blur-sm border-b border-white/20"
+          >
+            <div className="container mx-auto px-6 py-4">
+              <div className="flex items-center justify-between">
                 <button 
-                  onClick={() => handleTopNavClick('intro')}
-                  className={`px-3 py-2 rounded transition-all duration-300 ${
-                    currentView === 'intro' 
-                      ? 'bg-white/20' 
-                      : 'hover:bg-white/10 opacity-60 hover:opacity-100'
-                  }`}
+                  onClick={handleClose}
+                  className="text-lg font-semibold tracking-wide hover:text-white/80 transition-colors cursor-pointer"
                 >
-                  Intro
+                  Richard Su
                 </button>
-                <span className="text-white/50">|</span>
-                <button 
-                  onClick={() => handleTopNavClick('work')}
-                  className={`px-3 py-2 rounded transition-all duration-300 ${
-                    currentView === 'work' 
-                      ? 'bg-white/20' 
-                      : 'hover:bg-white/10 opacity-60 hover:opacity-100'
-                  }`}
+                <div className="hidden md:flex items-center space-x-1 text-sm">
+                  <button 
+                    onClick={() => handleTopNavClick('intro')}
+                    className={`px-3 py-2 rounded transition-all duration-300 ${
+                      currentView === 'intro' 
+                        ? 'bg-white/20' 
+                        : 'hover:bg-white/10 opacity-60 hover:opacity-100'
+                    }`}
+                  >
+                    Intro
+                  </button>
+                  <span className="text-white/50">|</span>
+                  <button 
+                    onClick={() => handleTopNavClick('work')}
+                    className={`px-3 py-2 rounded transition-all duration-300 ${
+                      currentView === 'work' 
+                        ? 'bg-white/20' 
+                        : 'hover:bg-white/10 opacity-60 hover:opacity-100'
+                    }`}
+                  >
+                    Projects
+                  </button>
+                  <span className="text-white/50">|</span>
+                  <button 
+                    onClick={() => handleTopNavClick('about')}
+                    className={`px-3 py-2 rounded transition-all duration-300 ${
+                      currentView === 'about' 
+                        ? 'bg-white/20' 
+                        : 'hover:bg-white/10 opacity-60 hover:opacity-100'
+                    }`}
+                  >
+                    Resume
+                  </button>
+                  <span className="text-white/50">|</span>
+                  <button 
+                    onClick={() => handleTopNavClick('contact')}
+                    className={`px-3 py-2 rounded transition-all duration-300 ${
+                      currentView === 'contact' 
+                        ? 'bg-white/20' 
+                        : 'hover:bg-white/10 opacity-60 hover:opacity-100'
+                    }`}
+                  >
+                    Contact
+                  </button>
+                </div>
+                <button
+                  onClick={handleClose}
+                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
                 >
-                  Projects
-                </button>
-                <span className="text-white/50">|</span>
-                <button 
-                  onClick={() => handleTopNavClick('about')}
-                  className={`px-3 py-2 rounded transition-all duration-300 ${
-                    currentView === 'about' 
-                      ? 'bg-white/20' 
-                      : 'hover:bg-white/10 opacity-60 hover:opacity-100'
-                  }`}
-                >
-                  Resume
-                </button>
-                <span className="text-white/50">|</span>
-                <button 
-                  onClick={() => handleTopNavClick('contact')}
-                  className={`px-3 py-2 rounded transition-all duration-300 ${
-                    currentView === 'contact' 
-                      ? 'bg-white/20' 
-                      : 'hover:bg-white/10 opacity-60 hover:opacity-100'
-                  }`}
-                >
-                  Contact
+                  <X className="w-4 h-4 text-white" />
                 </button>
               </div>
-              <button
-                onClick={handleClose}
-                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
-              >
-                <X className="w-4 h-4 text-white" />
-              </button>
             </div>
-          </div>
-        </nav>
-      )}
+          </motion.nav>
+        )}
+      </AnimatePresence>
 
-      {/* Background Image Layer */}
-      <div 
-        className={`fixed inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-in-out z-1 ${
-          isTransitioning ? 'opacity-0' : 'opacity-100'
-        }`}
+      <motion.div 
+        animate={{
+          scale: isArticleVisible ? 1.0825 : 1.125,
+          filter: isArticleVisible ? 'blur(0.2rem)' : 'blur(0px)',
+          opacity: isTransitioning ? 0 : 1
+        }}
+        transition={{ duration: 1, ease: "easeInOut" }}
+        className="fixed inset-0 bg-cover bg-center bg-no-repeat z-1"
         style={{
           backgroundImage: 'linear-gradient(to top, rgba(19, 21, 25, 0.5), rgba(19, 21, 25, 0.5)), url("images/bg.gif")',
-          transform: isArticleVisible ? 'scale(1.0825)' : 'scale(1.125)',
-          filter: isArticleVisible ? 'blur(0.2rem)' : 'none'
         }}
       />
       
-      {/* Solid background color during transition */}
       {isTransitioning && (
         <div className="fixed inset-0 bg-gray-900 z-0" />
       )}
       
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-between p-8 md:p-16">
         
-        <header 
-          className={`text-center transition-all duration-800 ease-in-out ${
-            isArticleVisible || isTransitioning ? 'opacity-0 transform scale-95 blur-sm pointer-events-none' : 'opacity-100'
-          }`}
-        >
-          <div className="w-24 h-24 md:w-28 md:h-28 rounded-full border border-white flex items-center justify-center mx-auto mb-8 overflow-hidden">
-            <img
-              src="/images/logo.jpg"
-              alt="Site logo"
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                // hide broken image and reveal inline fallback
-                e.currentTarget.style.display = 'none';
-                const fallback = e.currentTarget.nextElementSibling;
-                if (fallback) fallback.style.display = 'flex';
+        <AnimatePresence>
+          {!isArticleVisible && !isTransitioning && (
+            <motion.header 
+              initial="hidden"
+              animate={isLoading ? "hidden" : "visible"}
+              exit="exit"
+              className="text-center"
+            >
+              <motion.div
+                variants={{
+                  hidden: { scale: 0, opacity: 0 },
+                  visible: { 
+                    scale: 1, 
+                    opacity: 1,
+                    transition: { 
+                      type: "spring",
+                      stiffness: 260,
+                      damping: 20,
+                      delay: 1.3  // Starts after main fade-in
+                    }
+                  },
+                  exit: { 
+                    scale: 0.8, 
+                    opacity: 0,
+                    transition: { duration: 0.3 }
+                  }
+                }}
+                className="w-24 h-24 md:w-28 md:h-28 rounded-full border border-white flex items-center justify-center mx-auto mb-8 overflow-hidden"
+              >
+                <img
+                  src="/images/logo.jpg"
+                  alt="Site logo"
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    const fallback = e.currentTarget.nextElementSibling;
+                    if (fallback) fallback.style.display = 'flex';
+                  }}
+                />
+                <span
+                  aria-hidden="true"
+                  style={{ display: 'none' }}
+                  className="text-3xl md:text-5xl text-white leading-none items-center justify-center"
+                >
+                  🛩️
+                </span>
+              </motion.div>
+          
+              <motion.div 
+                variants={{
+                  hidden: { y: 30, opacity: 0 },
+                  visible: { 
+                    y: 0, 
+                    opacity: 1,
+                    transition: { 
+                      duration: 0.6,
+                      ease: "easeOut",
+                      delay: 1.6  // 0.3s after logo
+                    }
+                  },
+                  exit: { 
+                    y: -20, 
+                    opacity: 0,
+                    transition: { duration: 0.3 }
+                  }
+                }}
+                className="border-t border-b border-white py-8 mb-8 max-w-2xl"
+              >
+                <h1 className="text-2xl md:text-4xl font-light mb-4 uppercase tracking-wider">
+                  <Typewriter 
+                    texts={["Hi, I am Richard Su", "A student and developer", "Good to see you!"]}
+                    period={2000}
+                  />
+                </h1>
+                <p className="text-sm md:text-base uppercase tracking-wider leading-8 text-white/90">
+                  Hello / Bonjour / 你好 / Здравствуйте
+                </p>
+              </motion.div>
+          
+              <motion.nav
+                variants={{
+                  hidden: { y: 30, opacity: 0 },
+                  visible: { 
+                    y: 0, 
+                    opacity: 1,
+                    transition: { 
+                      duration: 0.6,
+                      ease: "easeOut",
+                      delay: 1.9,
+                      staggerChildren: 0.1,  // Stagger each button
+                      delayChildren: 0.2     // Start after nav appears
+                    }
+                  },
+                  exit: { 
+                    y: -30, 
+                    scale: 0.95,
+                    opacity: 0,
+                    transition: { duration: 0.4 }
+                  }
+                }}
+                className="border border-white rounded inline-flex overflow-hidden"
+              >
+                <motion.button
+                  variants={{
+                    hidden: { scale: 0, opacity: 0 },
+                    visible: { 
+                      scale: 1, 
+                      opacity: 1,
+                      transition: {
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 17
+                      }
+                    }
+                  }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handleMainNavClick('intro')}
+                  className="px-4 md:px-6 py-3 text-xs md:text-sm uppercase tracking-wider border-r border-white hover:bg-white/10 transition-all duration-300"
+                >
+                  Intro
+                </motion.button>
+                <motion.button
+                  variants={{
+                    hidden: { scale: 0, opacity: 0 },
+                    visible: { 
+                      scale: 1, 
+                      opacity: 1,
+                      transition: {
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 17
+                      }
+                    }
+                  }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handleMainNavClick('work')}
+                  className="px-4 md:px-6 py-3 text-xs md:text-sm uppercase tracking-wider border-r border-white hover:bg-white/10 transition-all duration-300"
+                >
+                  Projects
+                </motion.button>
+                <motion.button
+                  variants={{
+                    hidden: { scale: 0, opacity: 0 },
+                    visible: { 
+                      scale: 1, 
+                      opacity: 1,
+                      transition: {
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 17
+                      }
+                    }
+                  }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handleMainNavClick('about')}
+                  className="px-4 md:px-6 py-3 text-xs md:text-sm uppercase tracking-wider border-r border-white hover:bg-white/10 transition-all duration-300"
+                >
+                  Resume
+                </motion.button>
+                <motion.button
+                  variants={{
+                    hidden: { scale: 0, opacity: 0 },
+                    visible: { 
+                      scale: 1, 
+                      opacity: 1,
+                      transition: {
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 17
+                      }
+                    }
+                  }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handleMainNavClick('contact')}
+                  className="px-4 md:px-6 py-3 text-xs md:text-sm uppercase tracking-wider hover:bg-white/10 transition-all duration-300"
+                >
+                  Contact
+                </motion.button>
+              </motion.nav>
+            </motion.header>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence mode="wait">
+          {isArticleVisible && (
+            <motion.article
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 50 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="fixed inset-0 bg-gray-900/95 backdrop-blur-sm"
+              style={{ paddingTop: '80px' }}
+              onClick={(e) => {
+                if (e.target === e.currentTarget && selectedProject === null) {
+                  handleClose();
+                }
               }}
-            />
-            <span
-              aria-hidden="true"
-              style={{ display: 'none' }}
-              className="text-3xl md:text-5xl text-white leading-none items-center justify-center"
             >
-              🛩️
-            </span>
-          </div>
-          
-          <div className="border-t border-b border-white py-8 mb-8 max-w-2xl">
-            <h1 className="text-2xl md:text-4xl font-light mb-4 uppercase tracking-wider">
-              <Typewriter 
-                texts={["Hi, I am Richard Su", "A student and developer", "Good to see you!"]}
-                period={2000}
-              />
-            </h1>
-            <p className="text-sm md:text-base uppercase tracking-wider leading-8 text-white/90">
-              Hello / Bonjour / 你好 / Здравствуйте
-            </p>
-          </div>
-          
-          <nav className={`border border-white rounded inline-flex transition-all duration-800 ${
-            isTransitioning ? 'animate-moveToTop' : ''
-          }`}>
-            <button 
-              onClick={() => handleMainNavClick('intro')}
-              className="px-4 md:px-6 py-3 text-xs md:text-sm uppercase tracking-wider border-r border-white hover:bg-white/10 transition-all duration-300"
-            >
-              Intro
-            </button>
-            <button 
-              onClick={() => handleMainNavClick('work')}
-              className="px-4 md:px-6 py-3 text-xs md:text-sm uppercase tracking-wider border-r border-white hover:bg-white/10 transition-all duration-300"
-            >
-              Projects
-            </button>
-            <button 
-              onClick={() => handleMainNavClick('about')}
-              className="px-4 md:px-6 py-3 text-xs md:text-sm uppercase tracking-wider border-r border-white hover:bg-white/10 transition-all duration-300"
-            >
-              Resume
-            </button>
-            <button 
-              onClick={() => handleMainNavClick('contact')}
-              className="px-4 md:px-6 py-3 text-xs md:text-sm uppercase tracking-wider hover:bg-white/10 transition-all duration-300"
-            >
-              Contact
-            </button>
-          </nav>
-        </header>
-
-        {isArticleVisible && (
-          <article 
-            className={`fixed inset-0 bg-gray-900/95 backdrop-blur-sm transition-all duration-500 ease-in-out ${
-              isArticleVisible ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'
-            }`}
-            style={{ paddingTop: '80px' }}
-            onClick={(e) => {
-              if (e.target === e.currentTarget && selectedProject === null) {
-                handleClose();
-              }
-            }}
-          >
-            {currentView !== 'work' || selectedProject === null ? (
-              <div className="container mx-auto px-6 md:px-12 py-12 max-w-4xl h-full overflow-y-auto no-scrollbar">
-                <div className="animate-fadeIn">
+              {currentView !== 'work' || selectedProject === null ? (
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.2 }}
+                  className="container mx-auto px-6 md:px-12 py-12 max-w-4xl h-full overflow-y-auto no-scrollbar"
+                >
                   {renderArticleContent()}
-                </div>
-              </div>
-            ) : (
-              <div className="animate-fadeIn h-full">
-                {renderArticleContent()}
-              </div>
-            )}
-          </article>
-        )}
+                </motion.div>
+              ) : (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.4, delay: 0.2 }}
+                  className="h-full"
+                >
+                  {renderArticleContent()}
+                </motion.div>
+              )}
+            </motion.article>
+          )}
+        </AnimatePresence>
 
-        <footer 
-          className={`text-center transition-all duration-800 ease-in-out ${
-            isArticleVisible || isTransitioning ? 'opacity-0 transform scale-95 blur-sm pointer-events-none' : 'opacity-100'
-          }`}
-        >
-          <div className="space-y-2">
-            <p className="text-xs text-white/50">
-              Visitor #{visitorCount.toLocaleString()}
-            </p>
-          </div>
-        </footer>
+        <AnimatePresence>
+          {!isArticleVisible && !isTransitioning && (
+            <motion.footer
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.06 }}  // fast hide without extra delay
+              className="text-center"
+            >
+              <div className="space-y-2">
+                <p className="text-xs text-white/50">
+                  Visitor #{visitorCount.toLocaleString()}
+                </p>
+              </div>
+            </motion.footer>
+          )}
+        </AnimatePresence>
       </div>
 
-      {isArticleVisible && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-5 transition-opacity duration-500"
-          onClick={handleClose}
-        />
-      )}
+      <AnimatePresence>
+        {isArticleVisible && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 bg-black/50 z-5"
+            onClick={handleClose}
+          />
+        )}
+      </AnimatePresence>
       
-      {/* Custom animations */}
       <style jsx>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
-       /* softened header transition so it doesn't jump to the center */
-        @keyframes moveToTop {
-          from {
-            transform: translateY(0) scale(1);
-            opacity: 1;
-          }
-          to {
-            transform: translateY(-8px) scale(0.985);
-            opacity: 0.65;
-          }
-        }
-        
-        /* nav should slide/fade in from the top, not from the center of the page */
-        @keyframes slideFromTop {
-          from {
-            transform: translateY(-18px) scale(0.995);
-            opacity: 0;
-          }
-          to {
-            transform: translateY(0) scale(1);
-            opacity: 1;
-          }
-        }
-        
-        .animate-fadeIn {
-          animation: fadeIn 0.6s ease-out forwards;
-        }
-        
-        .animate-moveToTop {
-          animation: moveToTop 0.8s ease-in-out forwards;
-        }
-        
-        .animate-slideFromTop {
-          animation: slideFromTop 0.8s ease-out forwards;
-        }
-
         .no-scrollbar {
-          -ms-overflow-style: none;  /* IE and Edge */
-          scrollbar-width: none;  /* Firefox */
+          -ms-overflow-style: none;
+          scrollbar-width: none;
         }
         .no-scrollbar::-webkit-scrollbar {
-          width: 0;  /* Safari and Chrome */
+          width: 0;
           height: 0;
-          display: none;  /* Chrome, Safari, Opera*/
+          display: none;
         }
       `}</style>
-    </div>
+    </motion.div>
     </>
   );
 };
