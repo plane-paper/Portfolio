@@ -2,67 +2,168 @@ import React, { useState, useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
 
 // Loading Screen Component
-const LoadingScreen = () => {
-  const [loadingText, setLoadingText] = useState('');
-  const [isDeleting, setIsDeleting] = useState(false);
+const LoadingScreen = ({ onDone}) => {
+  const canvasRef = useRef(null);
   const [isComplete, setIsComplete] = useState(false);
-  const [charIndex, setCharIndex] = useState(0);
-  const [isFadingOut, setIsFadingOut] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(true);
 
   useEffect(() => {
-    const fullText = 'Richard Su';
-    
-    const typeText = () => {
-      if (!isDeleting) {
-        // Typing phase
-        if (charIndex < fullText.length) {
-          setLoadingText(fullText.substring(0, charIndex + 1));
-          setCharIndex(prev => prev + 1);
-        } else {
-          // Wait for 1 second, then start deleting
-          setTimeout(() => setIsDeleting(true), 1000);
+    let rafId = null;
+    let cancelled = false;
+    let tiles = [];
+    let startTime = null;
+    const duration = 1800; // ms to reconstruct
+    const scrambleDuration = 1000; // initial scramble hold
+    const totalDuration = scrambleDuration + duration;
+
+    const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+
+    const run = async () => {
+      try {
+        const html2canvas = (await import('html2canvas')).default;
+        // snapshot the app root (we ensure the parent has id="app-root")
+        const target = document.getElementById('app-root') || document.body;
+        // give the browser a tick to ensure the app is painted
+        await new Promise((r) => setTimeout(r, 40));
+        const snapshot = await html2canvas(target, { useCORS: true, backgroundColor: null, logging: false });
+        if (cancelled) return;
+
+        const snapshotW = snapshot.width;
+        const snapshotH = snapshot.height;
+
+        // fit canvas to viewport but use snapshot scale to avoid CORS scaling issues
+        const canvas = canvasRef.current;
+        canvas.width = snapshotW;
+        canvas.height = snapshotH;
+        canvas.style.width = `${window.innerWidth}px`;
+        canvas.style.height = `${window.innerHeight}px`;
+        const ctx = canvas.getContext('2d');
+
+        // tile settings (tweak for performance)
+        const tileSize = Math.max(12, Math.floor(Math.max(snapshotW, snapshotH) / 32)); // ~32 tiles across
+        const cols = Math.ceil(snapshotW / tileSize);
+        const rows = Math.ceil(snapshotH / tileSize);
+
+        // build tile list with original position + random start position
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            const sx = c * tileSize;
+            const sy = r * tileSize;
+            const sw = Math.min(tileSize, snapshotW - sx);
+            const sh = Math.min(tileSize, snapshotH - sy);
+
+            // extract image data for the tile (draw to temp canvas)
+            const temp = document.createElement('canvas');
+            temp.width = sw;
+            temp.height = sh;
+            const tctx = temp.getContext('2d');
+            tctx.drawImage(snapshot, sx, sy, sw, sh, 0, 0, sw, sh);
+
+            // random start position (offscreen spread)
+            const randX = Math.floor(Math.random() * (snapshotW + 200)) - 100;
+            const randY = Math.floor(Math.random() * (snapshotH + 200)) - 100;
+
+            tiles.push({
+              img: temp,
+              ox: sx,
+              oy: sy,
+              w: sw,
+              h: sh,
+              sx: randX,
+              sy: randY
+            });
+          }
         }
-      } else {
-        // Deleting phase
-        if (loadingText.length > 0) {
-          setLoadingText(prev => prev.substring(0, prev.length - 1));
-        } else {
-          // Start fade out transition
-          setIsFadingOut(true);
-          setTimeout(() => setIsComplete(true), 500); // Fade out duration
-        }
+
+        // animation loop: scramble hold then move tiles to original positions
+        const animate = (ts) => {
+          if (!startTime) startTime = ts;
+          const elapsed = ts - startTime;
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          // draw background (semi-dark) for dramatic effect
+          ctx.fillStyle = 'rgba(10,11,13,0.95)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          tiles.forEach(tile => {
+            if (elapsed < scrambleDuration) {
+              // during scramble hold: draw at random start
+              ctx.drawImage(tile.img, 0, 0, tile.w, tile.h, tile.sx, tile.sy, tile.w, tile.h);
+            } else {
+              // interpolation from start -> original
+              const t = (elapsed - scrambleDuration) / duration;
+              const tt = Math.min(1, Math.max(0, easeOutCubic(t)));
+              const x = tile.sx + (tile.ox - tile.sx) * tt;
+              const y = tile.sy + (tile.oy - tile.sy) * tt;
+              ctx.drawImage(tile.img, 0, 0, tile.w, tile.h, x, y, tile.w, tile.h);
+            }
+          });
+
+          if (elapsed < totalDuration) {
+            rafId = requestAnimationFrame(animate);
+          } else {
+            // final draw to ensure crisp result
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(snapshot, 0, 0);
+            // fade out after short pause
+            setTimeout(() => {
+              setIsAnimating(false);
+              // allow parent to remove LoadingScreen
+              setTimeout(() => {
+                setIsComplete(true);
+                if (typeof onDone === 'function') onDone();
+              }, 350);
+            }, 220);
+          }
+        };
+
+        rafId = requestAnimationFrame(animate);
+      } catch (err) {
+        // if html2canvas import or snapshot fails, fallback to a simple fade/typing style
+        // small graceful fallback: wait briefly then complete
+        console.warn('Snapshot failed, falling back to simple loader animation.', err);
+        setTimeout(() => {
+          setIsAnimating(false);
+          setTimeout(() => {
+                setIsComplete(true);
+                if (typeof onDone === 'function') onDone();
+              }, 350);
+        }, 1000);
       }
     };
 
-    const speed = isDeleting ? 100 : 150;
-    const timer = setTimeout(typeText, speed);
+    run();
 
-    return () => clearTimeout(timer);
-  }, [charIndex, isDeleting, loadingText]);
+    return () => {
+      cancelled = true;
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, []);
 
   if (isComplete) return null;
 
   return (
-    <div className={`fixed inset-0 bg-gray-900 flex items-center justify-center z-50 transition-opacity duration-500 ${
-      isFadingOut ? 'opacity-0' : 'opacity-100'
-    }`}>
-      <div className="text-center">
-        <h1 className="text-4xl md:text-6xl font-light text-white uppercase tracking-wider">
-          {loadingText}
-          <span className="animate-pulse">|</span>
+    <div className={`fixed inset-0 flex items-center justify-center z-50 transition-opacity duration-500 ${isAnimating ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} style={{ background: 'transparent' }}>
+      {/* The canvas covers the whole snapshot and animates tiles */}
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
+      {/* subtle fallback text under canvas (hidden when canvas draws) */}
+      <div className="text-center z-50 pointer-events-none">
+        <h1 className="text-4xl md:text-6xl font-light text-white uppercase tracking-wider opacity-0">
+          Loading
         </h1>
       </div>
     </div>
   );
 };
 
-const Typewriter = ({ texts, period = 2000 }) => {
+const Typewriter = ({ texts, period = 2000, enabled = true }) => {
   const [currentText, setCurrentText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
+    if (!enabled) return; // don't run until allowed
     if (texts.length === 0) return;
 
     const currentFullText = texts[currentIndex];
@@ -89,7 +190,7 @@ const Typewriter = ({ texts, period = 2000 }) => {
 
     const timeout = setTimeout(updateText, isDeleting ? 100 : 150);
     return () => clearTimeout(timeout);
-  }, [currentText, currentIndex, isDeleting, isPaused, texts, period]);
+  }, [currentText, currentIndex, isDeleting, isPaused, texts, period, enabled]);
 
   return (
     <span className="inline-block">
@@ -137,6 +238,8 @@ const ProjectTile = ({ project, index, onProjectSelect, isCompact, isSelected = 
         <div className="w-full h-48 overflow-hidden rounded-lg mt-4">
           <img 
             src={project.images[0]} 
+            loading="lazy"
+            decoding="async"
             alt={project.title} 
             className="w-full h-full object-cover transition-transform duration-300 hover:scale-105" 
           />
@@ -215,7 +318,9 @@ const ProjectDetail = ({ project, onClose }) => {
         {project.images && project.images.map((image, index) => (
           <div key={index} className="mb-8">
             <img 
-              src={image} 
+              src={image}
+              loading="lazy"
+              decoding="async"
               alt={`${project.title} ${index + 1}`} 
               className="w-full rounded-lg shadow-2xl" 
             />
@@ -259,12 +364,14 @@ const ProjectDetail = ({ project, onClose }) => {
 
 // Main Portfolio Component
 const Portfolio = () => {
+  const [showScramble, setShowScramble] = useState(false);
   const [currentView, setCurrentView] = useState('home');
   const [isArticleVisible, setIsArticleVisible] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [visitorCount, setVisitorCount] = useState(0);
+  const [typingEnabled, setTypingEnabled] = useState(false);
 
   // Project navigation helpers
   const [searchQuery, setSearchQuery] = useState('');
@@ -273,11 +380,25 @@ const Portfolio = () => {
 
   // Loading screen effect
   useEffect(() => {
-    const timer = setTimeout(() => {
+    let fallbackTimer = null;
+    const onLoad = () => {
+      // page fully loaded: reveal app and then play scramble overlay
       setIsLoading(false);
-    }, 5000); // Extended to accommodate the fade out transition
+      // small tick to allow styles to settle
+      setTimeout(() => setShowScramble(true), 60);
+      window.removeEventListener('load', onLoad);
+      if (fallbackTimer) clearTimeout(fallbackTimer);
+    };
 
-    return () => clearTimeout(timer);
+    window.addEventListener('load', onLoad);
+    // fallback in case 'load' never fires quickly (cap at 7s)
+    fallbackTimer = setTimeout(() => {
+      onLoad();
+    }, 10000);
+    return () => {
+      window.removeEventListener('load', onLoad);
+      if (fallbackTimer) clearTimeout(fallbackTimer);
+    };
   }, []);
 
   // Visitor count effect - using in-memory storage instead of localStorage
@@ -496,6 +617,8 @@ const Portfolio = () => {
               <figure className="mt-6 flex flex-col items-center">
           <img
             src="images/pic01.jpg"
+            loading="lazy"
+            decoding="async"
             alt="A photo of me"
             className="w-[90%] md:w-[400px] h-auto rounded"
           />
@@ -749,10 +872,23 @@ const Portfolio = () => {
       <div className="fixed inset-0 bg-gray-900 z-0" />
       
       {/* Loading Screen */}
-      {isLoading && <LoadingScreen />}
+      {isLoading && (
+        <div className="fixed inset-0 z-40 flex items-center justify-center" style={{ background: '#0b4b8a' }} />
+      )}
+      {!isLoading && showScramble && (
+        <LoadingScreen onDone={() => {
+          setShowScramble(false);
+          // enable typing after scramble finishes
+          setTypingEnabled(true);
+        }} />
+      )}
+
+      {!isLoading && showScramble && (
+        <LoadingScreen onDone={() => setShowScramble(false)} />
+      )}
       
       {/* Main App */}
-      <div className={`min-h-screen text-white relative overflow-hidden transition-opacity duration-1000 ${
+      <div id="app-root" className={`min-h-screen text-white relative overflow-hidden transition-opacity duration-1000 ${
         isLoading ? 'opacity-0' : 'opacity-100'
       }`} style={{ fontFamily: "'Source Sans Pro', sans-serif" }}>
       
@@ -875,6 +1011,7 @@ const Portfolio = () => {
               <Typewriter 
                 texts={["Hi, I am Richard Su", "A student and developer", "Good to see you!"]}
                 period={2000}
+                enabled={typingEnabled}
               />
             </h1>
             <p className="text-sm md:text-base uppercase tracking-wider leading-8 text-white/90">
