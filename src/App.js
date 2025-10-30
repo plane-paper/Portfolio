@@ -932,9 +932,6 @@ const Portfolio = () => {
           }`}
         >
           <div className="space-y-2">
-            <p className="text-xs uppercase tracking-wider text-white/75">
-              Proudly built with React
-            </p>
             <p className="text-xs text-white/50">
               Visitor #{visitorCount.toLocaleString()}
             </p>
