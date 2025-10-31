@@ -1058,23 +1058,35 @@ const Portfolio = () => {
               }}
             >
               {currentView !== 'work' || selectedProject === null ? (
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.2 }}
-                  className="container mx-auto px-6 md:px-12 py-12 max-w-4xl h-full overflow-y-auto no-scrollbar"
-                >
-                  {renderArticleContent()}
-                </motion.div>
+                <div className="container mx-auto px-6 md:px-12 py-12 max-w-4xl h-full overflow-y-auto no-scrollbar">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={currentView}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 20 }}
+                      transition={{ duration: 0.45, ease: "easeOut" }}
+                      className="h-full"
+                    >
+                      {renderArticleContent()}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
               ) : (
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.4, delay: 0.2 }}
-                  className="h-full"
-                >
-                  {renderArticleContent()}
-                </motion.div>
+                <div className="h-full">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={currentView}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 20 }}
+                      transition={{ duration: 0.45, ease: "easeOut" }}
+                      className="h-full"
+                    >
+                      {renderArticleContent()}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
               )}
             </motion.article>
           )}
