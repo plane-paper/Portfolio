@@ -150,15 +150,20 @@ const ProjectTile = ({ project, index, onProjectSelect, isCompact, isSelected = 
       )}
       
       <p className="text-white/80 mt-4 text-center">
-        Click to view details →
+        Click to view details → 
       </p>
     </div>
   );
 };
 
-// Project Detail Component
+// Animation for sidebar and project content
 const ProjectDetail = ({ project, onClose }) => {
   const videoRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, [project]);
 
   const handleVideoClick = (e) => {
     e.stopPropagation();
@@ -187,7 +192,14 @@ const ProjectDetail = ({ project, onClose }) => {
   const githubLink = getGitHubLink();
 
   return (
-    <div className="h-full p-8 overflow-y-auto no-scrollbar">
+    <motion.div 
+      initial={{ opacity: 0, y: 100 }} // Changed from x: -100 to y: 100
+      animate={{ opacity: 1, y: 0 }}   // Changed from x: 0 to y: 0
+      exit={{ opacity: 0, y: -100 }}   // Changed from x: 100 to y: -100
+      transition={{ duration: 0.5 }}
+      className={`h-full p-8 overflow-y-auto no-scrollbar ${isVisible ? 'fade-in' : ''}`}
+    >
+      <div className="h-full p-8 overflow-y-auto no-scrollbar">
       <div className="max-w-4xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           {githubLink ? (
@@ -260,8 +272,10 @@ const ProjectDetail = ({ project, onClose }) => {
         )}
       </div>
     </div>
+    </motion.div>
   );
 };
+
 
 // Main Portfolio Component
 const Portfolio = () => {
