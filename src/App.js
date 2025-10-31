@@ -487,7 +487,7 @@ const Portfolio = () => {
     switch (currentView) {
       case 'intro':
         return (
-          <div>
+          <div className="pb-7"> {/* Added padding at the bottom */}
             <h2 className="text-2xl font-semibold uppercase tracking-wide mb-6 text-white border-b border-white pb-2">
               Intro
             </h2>
@@ -540,7 +540,7 @@ const Portfolio = () => {
         }
         
         return (
-          <div>
+          <div className="pb-7"> {/* Added padding at the bottom */}
             <h2 className="text-2xl font-semibold uppercase tracking-wide mb-6 text-white border-b border-white pb-2">
               Projects
             </h2>
@@ -600,7 +600,7 @@ const Portfolio = () => {
       
       case 'about':
         return (
-          <div>
+          <div className="pb-7"> {/* Added padding at the bottom */}
             <h2 className="text-2xl font-semibold uppercase tracking-wide mb-6 text-white border-b border-white pb-2">
               Resume
             </h2>
