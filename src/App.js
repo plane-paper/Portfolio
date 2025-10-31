@@ -335,7 +335,7 @@ const Portfolio = () => {
     },
     {
       title: "QuickSilver",
-      images: ["images/pic12.jpg"],
+      images: ["images/pic12.jpg", "images/pic19.jpg"],
       details: [
         "Built a broadcaster that sends the IP address, name, OS, MAC, and broadcast time in JSON format to every machine in the LAN, and a receiver that listens for all broadcasts on the LAN and organizes the information received based on OS types before returning it to the user.",
         "Built a file sending and receiving system via a TCP connection that allows the user to freely choose the target device (any broadcasting device in the LAN) and target file on the sender end, and a system to validate the file on the receiver end.",
