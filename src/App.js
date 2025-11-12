@@ -515,7 +515,7 @@ const Portfolio = () => {
               <figure className="mt-6 flex flex-col items-center">
           <img
             src="images/pic01.jpg"
-            alt="A photo of me"
+            alt="Me going to the barber for the first time"
             className="w-[90%] md:w-[400px] h-auto rounded"
           />
           <figcaption className="text-sm text-white/60 mt-2 italic">
