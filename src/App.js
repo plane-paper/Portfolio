@@ -1063,7 +1063,7 @@ const Portfolio = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 50 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              className="fixed inset-0 bg-gray-900/95 backdrop-blur-sm"
+              className="fixed inset-0 bg-gray-900/95 backdrop-blur-sm overflow-y-auto no-scrollbar"
               style={{ paddingTop: '80px' }}
               onClick={(e) => {
                 if (e.target === e.currentTarget && selectedProject === null) {
@@ -1072,7 +1072,7 @@ const Portfolio = () => {
               }}
             >
               {currentView !== 'work' || selectedProject === null ? (
-                <div className="container mx-auto px-6 md:px-12 py-12 max-w-4xl h-full overflow-y-auto no-scrollbar">
+                <div className="container mx-auto px-6 md:px-12 py-12 max-w-4xl no-scrollbar">
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={currentView}
