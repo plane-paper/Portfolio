@@ -486,13 +486,13 @@ const Portfolio = () => {
     setCurrentView('home');
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === 'Escape' && isArticleVisible) {
-      handleClose();
-    }
-  };
-
   useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.key === 'Escape' && isArticleVisible) {
+        handleClose();
+      }
+    };
+
     document.addEventListener('keydown', handleKeyPress);
     return () => document.removeEventListener('keydown', handleKeyPress);
   }, [isArticleVisible]);
@@ -515,6 +515,7 @@ const Portfolio = () => {
               <figure className="mt-6 flex flex-col items-center">
           <img
             src="images/pic01.jpg"
+            alt="A photo of me"
             className="w-[90%] md:w-[400px] h-auto rounded"
           />
           <figcaption className="text-sm text-white/60 mt-2 italic">
