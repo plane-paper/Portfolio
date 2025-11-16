@@ -699,7 +699,7 @@ const Portfolio = () => {
                     formData.append('email', document.getElementById('email').value);
                     formData.append('message', document.getElementById('message').value);
                     
-                    fetch('https://formsubmit.co/1a4182dd618b3c2d51cda6e7299d1f77 ', {
+                    fetch('https://formsubmit.co/1a4182dd618b3c2d51cda6e7299d1f77 ', { // This might not work anymore. Replace soon with Resend
                       method: 'POST',
                       body: formData
                     }).then(() => {
@@ -739,6 +739,19 @@ const Portfolio = () => {
                   <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" />
                 </svg>
               </a>
+
+              <a
+                href="https://www.linkedin.com/in/ruiquansu"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className="w-12 h-12 rounded-full border border-white flex items-center justify-center hover:bg-white/10 transition-colors"
+              >
+                <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.327-.026-3.036-1.849-3.036-1.85 0-2.134 1.445-2.134 2.939v5.666H9.357V9h3.414v1.561h.049c.476-.9 1.637-1.849 3.368-1.849 3.602 0 4.269 2.368 4.269 5.451v6.289zM5.337 7.433c-1.144 0-2.069-.927-2.069-2.069 0-1.143.925-2.069 2.069-2.069 1.142 0 2.069.926 2.069 2.069 0 1.142-.927 2.069-2.069 2.069zm1.777 13.019H3.56V9h3.554v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.731v20.538C0 23.226.792 24 1.771 24h20.451C23.2 24 24 23.226 24 22.269V1.731C24 .774 23.2 0 22.225 0z" />
+                </svg>
+              </a>
+
 
               <a
                 href="https://github.com/plane-paper"
