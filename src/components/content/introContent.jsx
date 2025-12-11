@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { ChevronDown} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+
 
 const IntroContent = () => {
   const [openSection, setOpenSection] = useState(null);
@@ -29,42 +30,50 @@ const IntroContent = () => {
       }
     };
 
+    // smooth collapse: measure content and animate maxHeight
+    const contentRef = useRef(null);
+    const [measuredHeight, setMeasuredHeight] = useState(0);
+    useEffect(() => {
+    const el = contentRef.current;
+    if (!el) return;
+    // update measurement when content mounts / resizes
+    const update = () => setMeasuredHeight(el.scrollHeight);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+    }, [children]);
+
     return (
-      <div className="border border-white/20 rounded-lg overflow-hidden bg-white/5 backdrop-blur-sm">
+    <div className="border border-white/20 rounded-lg overflow-hidden bg-white/5 backdrop-blur-sm">
         <motion.button
-          onClick={handleClick}
-          className="w-full px-6 py-4 flex items-center justify-between hover:bg-white/5 transition-colors"
-          whileHover={{ backgroundColor: "rgba(255, 255, 255, 0.08)" }}
-          whileTap={{ scale: 0.98 }}
+        onClick={handleClick}
+        className="w-full px-6 py-4 flex items-center justify-between hover:bg-white/5 transition-colors"
+        whileHover={{ backgroundColor: "rgba(255, 255, 255, 0.08)" }}
+        whileTap={{ scale: 0.98 }}
         >
-          <h3 className="text-lg font-semibold uppercase tracking-wide text-white">
+        <h3 className="text-lg font-semibold uppercase tracking-wide text-white">
             {title}
-          </h3>
-          <motion.div
+        </h3>
+        <motion.div
             animate={{ rotate: isOpen ? 180 : 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-          >
+            transition={{ duration: 0.28, ease: "easeInOut" }}
+        >
             <ChevronDown className="w-5 h-5 text-white" />
-          </motion.div>
+        </motion.div>
         </motion.button>
-        
-        <AnimatePresence mode="wait">
-          {isOpen && (
-            <motion.div
-              key={title}
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="overflow-hidden"
-            >
-              <div className="px-6 pb-6 pt-2 space-y-3 text-white/90 leading-relaxed">
-                {children}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+        <motion.div
+        // don't use initial true/false so animation runs on both open and close
+        initial={false}
+        animate={{ maxHeight: isOpen ? measuredHeight : 0, opacity: isOpen ? 1 : 0 }}
+        transition={{ duration: 0.34, ease: "easeInOut" }}
+        style={{ overflow: 'hidden' }}
+        >
+        <div ref={contentRef} className="px-6 pb-6 pt-2 space-y-3 text-white/90 leading-relaxed">
+            {children}
+        </div>
+        </motion.div>
+    </div>
     );
   };
 
@@ -142,16 +151,18 @@ const IntroContent = () => {
               <p>Python, JavaScript/TypeScript, C++/C, C#, Java, SQL, Go, Scripting (Powershell/YAML/Bash/CMD)</p>
             </div>
             <div>
-              <p className="font-semibold text-white mb-2">Spoken Languages:</p>
-              <p>English, Mandarin, and French - fluently spoken</p>
-            </div>
-            <div>
               <p className="font-semibold text-white mb-2">Frameworks:</p>
               <p>NumPy, Pandas, Tensorflow, PyTorch, skLearn, spaCy, LangChain/LangGraph, Postgres/MySQL, Flask, FastAPI, Matplot, Kriging, MCP, Pydantic, React, Next.js</p>
             </div>
             <div>
                 <p className="font-semibold text-white mb-2">Developer Tools:</p>
                 <p>Git, Node, Yarn, Docker, VS/VS Code/PyCharm, Jupyter/Anaconda, NSIS, NuGet, Vim, Jira, Confluence, IntelliJ</p>
+            </div>
+            <div>
+              <p className="font-semibold text-white mb-2">Spoken Languages:</p>
+              <p>English and Mandarin - Native level</p>
+              <p>French - Fluent level</p>
+              <p>Cantonese - Still learning</p>
             </div>
           </div>
         </DropdownSection>
