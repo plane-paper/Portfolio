@@ -1,26 +1,163 @@
-const IntroContent = () => (
-  <div className="pb-7">
-    <h2 className="text-2xl font-semibold uppercase tracking-wide mb-6 text-white border-b border-white pb-2">
-      Intro
-    </h2>
-    <div className="space-y-4 text-white/90 leading-relaxed">
-      <p>I am a passionate full-stack and software developer with ample work experience entering the world of Electrical & Computer Engineering at the University of Waterloo.</p>
-      <p>I have completed various projects in the past, as big as single-handedly building a core product for Lynkr Inc. (an AI startup) that fetched over 100,000 CAD in revenue and over 3,000 waitlist customers, and as small as designing and building a 3D printed AI cat feeder with integrated machine imaging, or a brainrot translator that helps parents understand their kids.</p> 
-      <p>I speak English, Mandarin, and French fluently, and I have a multicultural background, being raised in two countries in my childhood. I am also fluent with most developer tools, most major languages, many modules, and many frameworks.</p>
-      <p>I also love to play chess, enjoy various video games, write, or read a nice book. I am decent at cooking, and terrible at giving myself haircuts despite my love for doing it.</p>
-      <p>For professional contact, please reach me at my university email: <a href="mailto:r38su@uwaterloo.ca" className="text-blue-300 hover:text-blue-200 underline">r38su@uwaterloo.ca</a>, or my personal email: <a href="mailto:suruiquan10@163.com" className="text-blue-300 hover:text-blue-200 underline">suruiquan8@gmail.com</a>.</p>
+import React, { useState } from 'react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-      <figure className="mt-6 flex flex-col items-center">
-        <img
-          src="images/pic01.jpg"
-          alt="Me going to the barber for the first time"
-          className="w-[90%] md:w-[400px] h-auto rounded"
-        />
-        <figcaption className="text-sm text-white/60 mt-2 italic">
-          The only time that I didn't cut my own hair and went to the barber in my whole life.
-        </figcaption>
-      </figure>
-    </div>
-  </div>
-);
+const IntroContent = () => {
+  const [openSection, setOpenSection] = useState(null);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const DropdownSection = ({ title, children }) => {
+    const isOpen = openSection === title;
+
+    const handleClick = () => {
+      if (isAnimating) return;
+
+      if (isOpen) {
+        // Just close the current section
+        setOpenSection(null);
+      } else if (openSection !== null) {
+        // Another section is open, close it first then open this one
+        setIsAnimating(true);
+        setOpenSection(null);
+        setTimeout(() => {
+          setOpenSection(title);
+          setIsAnimating(false);
+        }, 300); // Wait for close animation to complete
+      } else {
+        // No section is open, just open this one
+        setOpenSection(title);
+      }
+    };
+
+    return (
+      <div className="border border-white/20 rounded-lg overflow-hidden bg-white/5 backdrop-blur-sm">
+        <motion.button
+          onClick={handleClick}
+          className="w-full px-6 py-4 flex items-center justify-between hover:bg-white/5 transition-colors"
+          whileHover={{ backgroundColor: "rgba(255, 255, 255, 0.08)" }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <h3 className="text-lg font-semibold uppercase tracking-wide text-white">
+            {title}
+          </h3>
+          <motion.div
+            animate={{ rotate: isOpen ? 180 : 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+          >
+            <ChevronDown className="w-5 h-5 text-white" />
+          </motion.div>
+        </motion.button>
+        
+        <AnimatePresence mode="wait">
+          {isOpen && (
+            <motion.div
+              key={title}
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="overflow-hidden"
+            >
+              <div className="px-6 pb-6 pt-2 space-y-3 text-white/90 leading-relaxed">
+                {children}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  };
+
+  return (
+    <div className="pb-7">
+      <h2 className="text-2xl font-semibold uppercase tracking-wide mb-6 text-white border-b border-white pb-2">
+        Intro
+      </h2>
+
+      <div className="mb-6 flex flex-col md:flex-row gap-6 items-start">
+        <div className="flex-1">
+          <p className="text-white/90 leading-relaxed">
+            Hello! I'm a passionate full-stack and software developer studying Electrical & Computer Engineering at the University of Waterloo, fostering hands-on experience with the co-op program, and academic success during my study terms.
+            <br />
+            I love building impactful projects that leverage modern technologies to solve real-world problems! Check out my projects page for more information. I also freqeuently compete in hackathons and engineering competitions, winning multiple awards.
+            <br />
+            I have a multicultural background, having been raised in two countries during my childhood. This diverse upbringing has given me a unique perspective and adaptability in both technical and interpersonal contexts.
+            <br />
+            When I'm not studying or working, you may find me playing chess, gaming, writing, reading, debating, or cooking. I really wish I could cut my own hair, but reality often disappoints.
+          </p>
+        </div>
+        
+        <figure className="flex flex-col items-center md:w-64 flex-shrink-0">
+          <img
+            src="images/pic01.jpg"
+            alt="Me going to the barber"
+            className="w-full rounded-lg shadow-lg border border-white/20"
+          />
+          <figcaption className="text-xs text-white/50 mt-2 italic text-center">
+            The only time I went to the barber
+          </figcaption>
+        </figure>
+      </div>
+
+      <div className="space-y-4">
+        <DropdownSection title="Work Experience">
+          <p>
+            I have worked in a professional setting at a range of very different positions, and performed beyond expectation in all of them:
+          </p>
+          <p><strong>Lynkr Inc.</strong></p>
+          <ul>
+            <li>
+                Single-handedly built a core product for this AI startup that generated over <strong>100,000 CAD in revenue</strong> and attracted over <strong>3,000 waitlist customers</strong>
+            </li>
+            <li>
+
+            </li>
+          </ul>
+          <p><strong>Sioux Technologies</strong></p>
+            <ul>
+                <li>
+                </li>
+            </ul>
+          <p><strong>Capital Air Inc., Beijing Capital Group Co.</strong></p>
+            <ul>
+                <li>
+
+                </li>
+            </ul>
+        </DropdownSection>
+
+        <DropdownSection title="Education">
+          <p>
+            <strong>University of Waterloo</strong> - Computer Engineering, BASc
+          </p>
+          <p>
+            <strong>Rothesay Netherwood School</strong> - International Baccalaureate Diploma, 43/45
+          </p>
+        </DropdownSection>
+
+        <DropdownSection title="Skills & Languages">
+          <div className="space-y-3">
+            <div>
+              <p className="font-semibold text-white mb-2">Programming Languages:</p>
+              <p>Python, JavaScript/TypeScript, C++/C, C#, Java, SQL, Go, Scripting (Powershell/YAML/Bash/CMD)</p>
+            </div>
+            <div>
+              <p className="font-semibold text-white mb-2">Spoken Languages:</p>
+              <p>English, Mandarin, and French - fluently spoken</p>
+            </div>
+            <div>
+              <p className="font-semibold text-white mb-2">Frameworks:</p>
+              <p>NumPy, Pandas, Tensorflow, PyTorch, skLearn, spaCy, LangChain/LangGraph, Postgres/MySQL, Flask, FastAPI, Matplot, Kriging, MCP, Pydantic, React, Next.js</p>
+            </div>
+            <div>
+                <p className="font-semibold text-white mb-2">Developer Tools:</p>
+                <p>Git, Node, Yarn, Docker, VS/VS Code/PyCharm, Jupyter/Anaconda, NSIS, NuGet, Vim, Jira, Confluence, IntelliJ</p>
+            </div>
+          </div>
+        </DropdownSection>
+        </div>
+      </div>
+  );
+};
+
 export default IntroContent;
