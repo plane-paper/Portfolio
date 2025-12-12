@@ -11,7 +11,7 @@ export default async function handler(req, res) {
     const resend = new Resend(process.env.RESEND_API_KEY);
 
     await resend.emails.send({
-      from: 'Website Contact <onboarding@resend.dev>',
+      from: 'noreply@richardsu.org',
       to: 'r38su@uwaterloo.ca',
       subject: `New message from ${name}`,
       text: `Email: ${email}\n\nMessage:\n${message}`,
