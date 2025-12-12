@@ -1,18 +1,26 @@
 const ContactContent = () => {
-  const handleSubmit = () => {
-    const formData = new FormData();
-    formData.append('name', document.getElementById('name').value);
-    formData.append('email', document.getElementById('email').value);
-    formData.append('message', document.getElementById('message').value);
-    
-    fetch('https://formsubmit.co/1a4182dd618b3c2d51cda6e7299d1f77', {
-      method: 'POST',
-      body: formData
-    }).then(() => {
-      alert('Message sent successfully!');
-    }).catch(() => {
+  const handleSubmit = async () => {
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const message = document.getElementById('message').value;
+
+    const payload = { name, email, message };
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        alert('Message sent successfully!');
+      } else {
+        alert('Failed to send message.');
+      }
+    } catch (err) {
       alert('Error sending message. Please try again.');
-    });
+    }
   };
 
   const handleReset = () => {
