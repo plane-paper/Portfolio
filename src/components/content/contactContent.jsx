@@ -3,8 +3,9 @@ const ContactContent = () => {
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
     const message = document.getElementById('message').value;
+    const subject = document.getElementById('subject').value;
 
-    const payload = { name, email, message };
+    const payload = { name, email, subject, message };
 
     try {
       const res = await fetch('/api/contact', {
@@ -65,6 +66,18 @@ const ContactContent = () => {
               className="w-full px-4 py-3 bg-transparent border border-white rounded text-white placeholder-white/50 focus:outline-none focus:ring-1 focus:ring-white"
             />
           </div>
+        </div>
+
+        <div>
+            <label htmlFor="subject" className="block text-white text-sm font-medium mb-2 uppercase tracking-wide">
+              Subject
+            </label>
+            <input
+              type="text"
+              name="subject"
+              id="subject"
+              className="w-full px-4 py-3 bg-transparent border border-white rounded text-white placeholder-white/50 focus:outline-none focus:ring-1 focus:ring-white"
+            />
         </div>
         
         <div>

@@ -5,7 +5,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { name, email, message } = req.body;
+  const { name, email, subject, message } = req.body;
 
   try {
     const resend = new Resend(process.env.RESEND_API_KEY);
@@ -13,8 +13,8 @@ export default async function handler(req, res) {
     await resend.emails.send({
       from: 'noreply@richardsu.org',
       to: 'r38su@uwaterloo.ca',
-      subject: `New message from ${name}`,
-      text: `Email: ${email}\n\nMessage:\n${message}`,
+      subject: `${subject}`,
+      text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
     });
 
     return res.status(200).json({ success: true });
