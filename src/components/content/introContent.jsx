@@ -151,7 +151,7 @@ return (
                     <li>President's Scholarship with Distinction</li>
                     <li>2nd Place - Waterloo Engineering Competition 2025</li>
                     <li>Honour Roll (Top 5%) - Canadian Computing Competition 2023</li>
-                    <li>Distinction (Top 30%) - Canadian Computing Competition 2021, 2022, 2024</li>
+                    <li>Distinction (Top 20%) - Canadian Computing Competition 2021, 2022, 2024</li>
                     <li>2nd Place - FIRST Robotics Competition Nationals 2023</li>
                     <li>High Commendation (Top 1.3%) - John Locke Essay Competition 2023</li>
                     <li>Governor's Bronze & Silver - Rothesay Netherwood School</li>
