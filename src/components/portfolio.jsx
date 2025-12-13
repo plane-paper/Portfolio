@@ -20,6 +20,7 @@ import HomeHeader from './content/homeHeader';
 
 // Data
 import { projects } from '../data/projects';
+import DecryptedText from './ui/decyptedText';
 
 const Portfolio = () => {
   const [currentView, setCurrentView] = useState('home');
@@ -307,6 +308,12 @@ const Portfolio = () => {
                     Visitor #{visitorCount.toLocaleString()}
                   </p>
                 </div>
+                <DecryptedText
+                  text="You found my secret! I hate runny eggs."
+                  sequential
+                  animateOn="hover"
+                  className="text-white/50 text-xs"
+                  encryptedClassName='text-white/50 text-xs'></DecryptedText>
               </motion.footer>
             )}
           </AnimatePresence>
