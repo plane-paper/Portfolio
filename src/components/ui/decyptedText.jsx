@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 export default function DecryptedText({
   text,
@@ -12,7 +12,7 @@ export default function DecryptedText({
   const intervalRef = useRef(null)
   const isHoveringRef = useRef(false)
 
-  const scramble = () => {
+  const scramble = useCallback(() => {
     setDisplayText(
       text
         .split("")
@@ -22,23 +22,23 @@ export default function DecryptedText({
         })
         .join("")
     )
-  }
+  }, [characters, text])
 
-  const startScrambling = () => {
+  const startScrambling = useCallback(() => {
     if (intervalRef.current) return
     intervalRef.current = setInterval(scramble, speed)
-  }
+  }, [scramble, speed])
 
-  const stopScrambling = () => {
+  const stopScrambling = useCallback(() => {
     clearInterval(intervalRef.current)
     intervalRef.current = null
     setDisplayText(text)
-  }
+  }, [text])
 
   useEffect(() => {
     startScrambling()
     return () => stopScrambling()
-  }, [text])
+  }, [startScrambling, stopScrambling])
 
   return (
     <span
