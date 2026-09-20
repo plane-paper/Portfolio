@@ -42,6 +42,41 @@ const IntroContent = () => {
                         <AccordionContent className="text-white/90 leading-relaxed">
                             {/* Nested accordion */}
                             <Accordion type="single" collapsible className="space-y-3">
+
+                            {/* RELEX */}
+                            <AccordionItem value="relex" className="border border-white/10 rounded-lg bg-white/5">
+                                <AccordionTrigger
+                                className="
+                                    px-4 py-3 rounded-md
+                                    hover:bg-white/10 hover:no-underline
+                                    transition-colors
+                                    text-left
+                                "
+                                >
+                                <div className="flex flex-col">
+                                    <span className="font-semibold text-white">RELEX Solutions</span>
+                                    <span className="text-sm text-white/70">Fullstack Engineer</span>
+                                    <span className="text-xs text-white/50">Jun 2026 – Aug 2026</span>
+                                </div>
+                                </AccordionTrigger>
+
+                                <AccordionContent className="px-4 pb-4">
+                                {/* TODO: add real RELEX metrics (KBs, tables, memories, users, latency, etc.) once confirmed */}
+                                <ul className="list-disc list-outside ml-5 space-y-1">
+                                    <li>Designed and built the enterprise <strong>Knowledge Base</strong> platform for a conversational <strong>AI data analyst</strong>, the <strong>semantic layer</strong> that teaches AI agents what a company's data actually means, using <strong>Flask</strong>, <strong>React</strong>, <strong>PostgreSQL</strong>, <strong>DynamoDB</strong>, <strong>Socket.io</strong>, and <strong>AWS</strong>, with the cloud infrastructure defined as code in <strong>Terraform</strong>.</li>
+                                    <li>Modeled the KB as <strong>configurable, database-backed context</strong>: connection details, <strong>table and field schemas</strong>, descriptions and aliases, <strong>table relationships</strong>, <strong>metric definitions</strong>, and <strong>business rules</strong>, so plain-language questions resolve to consistent business meaning rather than raw column names.</li>
+                                    <li>Fed KB context into the <strong>multi-agent</strong> analytics workflow, where the most relevant schemas, rules, and memories are retrieved at question time to ground <strong>intent interpretation</strong>, <strong>query generation</strong>, and <strong>result validation</strong>.</li>
+                                    <li>Built <strong>RBAC</strong> for the KB with <strong>admin</strong>, <strong>contributor</strong>, and <strong>viewer</strong> access levels, so teams control who can browse, edit, and approve changes to each knowledge base.</li>
+                                    <li>Implemented <strong>real-time collaboration</strong> with <strong>Socket.io</strong>, letting multiple contributors work in the same knowledge base at once and see each other's changes live without overwriting one another.</li>
+                                    <li>Added <strong>data validation</strong> that checks KB definitions against the live source database, including connection health and schema and field metadata, so broken or stale definitions are caught before they reach the AI.</li>
+                                    <li>Developed <strong>KB Memories</strong>, an <strong>example-retrieval layer</strong> that turns <strong>successful chat outcomes</strong> and user feedback into reusable <strong>memory artifacts</strong> that steer <strong>SQL generation</strong> for similar questions in the future.</li>
+                                    <li>Built <strong>similarity detection</strong> across memories to surface near-duplicate and competing examples, with a <strong>propose, review, and commit</strong> flow so contributors decide which examples actually influence the AI.</li>
+                                    <li>Implemented <strong>automatic revalidation</strong>: each memory tracks the tables, relationships, and business context it <strong>depends on</strong>, and is re-checked or invalidated when the KB changes, so outdated examples never mislead the model as the KB evolves.</li>
+                                    <li>Implemented <strong>KB lifecycle</strong> and <strong>version-control</strong> workflows so teams can safely evolve a knowledge base over time, including saving changes, archiving, and restoring.</li>
+                                    <li>Built <strong>AI-assisted authoring pipelines</strong> that use <strong>LLMs</strong> to help admins draft and refine table and field descriptions, business context, and rules, giving new knowledge bases a working starting point.</li>
+                                </ul>
+                                </AccordionContent>
+                            </AccordionItem>
                             
                             {/* Lynkr */}
                             <AccordionItem value="lynkr" className="border border-white/10 rounded-lg bg-white/5">
@@ -89,6 +124,8 @@ const IntroContent = () => {
 
                                 <AccordionContent className="px-4 pb-4">
                                 <ul className="list-disc list-outside ml-5 space-y-1">
+                                    <li>Cut <strong>on-site deployment time</strong> from <strong>98 hours to 20 hours</strong> by designing and developing <strong>concurrent, streamlined installation and upgrade processes</strong>, reducing manual overhead through <strong>GitLab CI/CD</strong> pipelines and scripting.</li>
+                                    <li>Refactored existing services into <strong>organized packages</strong> and developed <strong>Blazor-based API controllers</strong> to automate installations, enabling <strong>direct customer access</strong>.</li>
                                     <li>Automated <strong>server-side Windows configuration</strong> using <strong>PowerShell</strong> and <strong>Python</strong> scripts.</li>
                                     <li>Fully automated <strong>client software installation</strong> via <strong>PowerShell</strong>, significantly reducing setup time and simplifying operations.</li>
                                     <li>Automated <strong>dependency and prerequisite validation</strong> with <strong>PowerShell</strong>, including <strong>hot-fix logic</strong> to detect, debug, and install missing components during setup.</li>
@@ -174,11 +211,15 @@ const IntroContent = () => {
                             </div>
                             <div>
                                 <p className="font-semibold text-white mb-2">Frameworks:</p>
-                                <p>NumPy, Pandas, Tensorflow, PyTorch, skLearn, spaCy, LangChain/LangGraph, Postgres/MySQL, Flask, FastAPI, Matplot, Kriging, MCP, Pydantic, React, Next.js</p>
+                                <p>NumPy, Pandas, Tensorflow, PyTorch, skLearn, spaCy, LangChain/LangGraph, Postgres/MySQL, Flask, FastAPI, Matplot, Kriging, MCP, Pydantic, React, Next.js, Socket.io, Celery, Blazor</p>
+                            </div>
+                            <div>
+                                <p className="font-semibold text-white mb-2">Cloud & Infrastructure:</p>
+                                <p>AWS, Azure, Google Cloud, Terraform, DynamoDB, PostgreSQL, Redis</p>
                             </div>
                             <div>
                                 <p className="font-semibold text-white mb-2">Developer Tools:</p>
-                                <p>Git, Node, Yarn, Docker, VS/VS Code/PyCharm, Jupyter/Anaconda, NSIS, NuGet, Vim, Jira, Confluence, IntelliJ</p>
+                                <p>Git, GitHub Actions, GitLab CI/CD, Node, Yarn, Docker, VS/VS Code/PyCharm, Jupyter/Anaconda, NSIS, NuGet, Vim, Jira, Confluence, IntelliJ</p>
                             </div>
                             <div>
                                 <p className="font-semibold text-white mb-2">Spoken Languages:</p>
@@ -196,4 +237,3 @@ const IntroContent = () => {
 };
 
 export default IntroContent;
-

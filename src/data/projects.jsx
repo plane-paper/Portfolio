@@ -1,5 +1,23 @@
 export const projects = [
   {
+    title: "Reimburst",
+    description: "A web service that automates expense reimbursement end to end: photograph a receipt, and it extracts the details, categorizes each item, and either routes the request for approval or generates a request you can send yourself.",
+    // TODO: add images (e.g. a screenshot of the review screen or an architecture diagram)
+    images: ["images/pic20.png"],
+    details: [
+      "Built a full-stack reimbursement automation service (Next.js, TypeScript, FastAPI, PostgreSQL, Redis, Azure) that turns a photo of a receipt into a categorized, approvable expense request, usable end to end from a mobile browser as an installable PWA.",
+      "Used computer vision/OCR through a cloud document-understanding service to extract the merchant, date, currency, total, tax, and every line item from receipt photos, behind a swappable OCR provider interface, with images kept in object storage and only a storage key persisted in the database.",
+      "Categorized each line item with an LLM constrained to a fixed expense taxonomy through structured output, flagged low-confidence items for human review, and generated a natural-language synopsis of each request. Users review and edit the extracted breakdown before anything is submitted.",
+      "Built an asynchronous processing pipeline with FastAPI, Redis, and background workers, so extraction, categorization, and synopsis generation run as jobs and never block a request, with explicit pending, success, and retryable-error states in the UI.",
+      "Implemented the reimbursement workflow as a state machine (draft, submitted, approved, paid, with rejection) and role-based access control for individual users, employees, approvers, and admins, including rules such as no self-approval, an approver queue, notifications on key transitions, and a human-readable audit trail.",
+      "Engineered for financial integrity: all money is stored as integer cents with explicit currency codes, a reconciliation check blocks submission when line items don't add up to the receipt total, every state change is written to an immutable append-only audit log, and payout processing is idempotent so retries can never double-pay.",
+      "Implemented payout dispatch behind a swappable payroll provider interface, with a CSV export for manual payroll processing and an Employment Hero integration.",
+      "Built an individual mode on the same pipeline with personal spending history, filterable spending reports with charts and CSV/PDF export, item selection across receipts, and an LLM-generated, editable email or document that the user sends to an external payer.",
+      "Kept the TypeScript frontend and Python backend in sync with a language-neutral OpenAPI contract that generates the TypeScript client, inside a polyglot monorepo (pnpm and Turborepo for JavaScript, uv for Python), with versioned Alembic database migrations and CI.",
+      "Wrote a detailed specification first, with numbered requirements, a data model, and a phased build plan that put the riskiest assumption, OCR accuracy on messy real-world receipts, at the front of the schedule."
+    ]
+  },
+  {
     title: "SnapLearn",
     images: ["images/pic16.png", "images/pic17.png", "images/pic18.png"],
     details: [
