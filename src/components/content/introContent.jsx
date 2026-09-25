@@ -3,13 +3,13 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '..
 const IntroContent = () => {
     return (
         <div className="pb-7">
-            <h2 className="text-2xl font-semibold uppercase tracking-wide mb-6 text-white border-b border-white pb-2">
+            <h2 className="text-3xl md:text-2xl font-semibold uppercase tracking-wide mb-7 text-white border-b border-white pb-3">
                 Intro
             </h2>
 
             <div className="mb-6 flex flex-col md:flex-row gap-6 items-start">
                 <div className="flex-1">
-                    <p className="text-white/90 leading-relaxed">
+                    <p className="text-base md:text-base text-white/90 leading-8">
                         Hello! I'm a passionate full-stack and software developer studying Electrical & Computer Engineering at the University of Waterloo, fostering hands-on experience with the co-op program, and academic success during my study terms.
                         <br />
                         I love building impactful projects that leverage modern technologies to solve real-world problems! Check out my projects page for more information. I also frequently compete in hackathons and engineering competitions, winning multiple awards.
@@ -20,13 +20,13 @@ const IntroContent = () => {
                     </p>
                 </div>
                 
-                <figure className="flex flex-col items-center md:w-64 flex-shrink-0">
+                <figure className="flex flex-col items-center w-full md:w-64 flex-shrink-0">
                     <img
                         src="images/pic01.jpg"
                         alt="Me going to the barber"
                         className="w-full rounded-lg shadow-lg border border-white/20"
                     />
-                    <figcaption className="text-xs text-white/50 mt-2 italic text-center">
+                    <figcaption className="text-sm text-white/50 mt-3 italic text-center">
                         The only time I went to the barber
                     </figcaption>
                 </figure>

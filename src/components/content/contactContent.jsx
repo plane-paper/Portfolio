@@ -32,83 +32,83 @@ const ContactContent = () => {
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold uppercase tracking-wide mb-6 text-white border-b border-white pb-2">
+      <h2 className="text-3xl md:text-2xl font-semibold uppercase tracking-wide mb-7 text-white border-b border-white pb-3">
         Contact
       </h2>
-      <p className="text-white/90 mb-6">
+      <p className="text-base md:text-base leading-7 text-white/90 mb-8">
         The following information will be sent to my email at{' '}
         <a href="mailto:r38su@uwaterloo.ca" className="text-blue-300 hover:text-blue-200 underline">
           r38su@uwaterloo.ca
         </a>.
       </p>
       
-      <div className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label htmlFor="name" className="block text-white text-sm font-medium mb-2 uppercase tracking-wide">
+            <label htmlFor="name" className="block text-white text-base md:text-sm font-medium mb-2 uppercase tracking-wide">
               Name
             </label>
             <input
               type="text"
               name="name"
               id="name"
-              className="w-full px-4 py-3 bg-transparent border border-white rounded text-white placeholder-white/50 focus:outline-none focus:ring-1 focus:ring-white"
+              className="w-full px-4 py-3.5 bg-transparent border border-white rounded text-base text-white placeholder-white/50 focus:outline-none focus:ring-1 focus:ring-white"
             />
           </div>
           <div>
-            <label htmlFor="email" className="block text-white text-sm font-medium mb-2 uppercase tracking-wide">
+            <label htmlFor="email" className="block text-white text-base md:text-sm font-medium mb-2 uppercase tracking-wide">
               Email
             </label>
             <input
               type="email"
               name="email"
               id="email"
-              className="w-full px-4 py-3 bg-transparent border border-white rounded text-white placeholder-white/50 focus:outline-none focus:ring-1 focus:ring-white"
+              className="w-full px-4 py-3.5 bg-transparent border border-white rounded text-base text-white placeholder-white/50 focus:outline-none focus:ring-1 focus:ring-white"
             />
           </div>
         </div>
 
         <div>
-            <label htmlFor="subject" className="block text-white text-sm font-medium mb-2 uppercase tracking-wide">
+            <label htmlFor="subject" className="block text-white text-base md:text-sm font-medium mb-2 uppercase tracking-wide">
               Subject
             </label>
             <input
               type="text"
               name="subject"
               id="subject"
-              className="w-full px-4 py-3 bg-transparent border border-white rounded text-white placeholder-white/50 focus:outline-none focus:ring-1 focus:ring-white"
+              className="w-full px-4 py-3.5 bg-transparent border border-white rounded text-base text-white placeholder-white/50 focus:outline-none focus:ring-1 focus:ring-white"
             />
         </div>
         
         <div>
-          <label htmlFor="message" className="block text-white text-sm font-medium mb-2 uppercase tracking-wide">
+          <label htmlFor="message" className="block text-white text-base md:text-sm font-medium mb-2 uppercase tracking-wide">
             Message
           </label>
           <textarea
             name="message"
             id="message"
             rows={4}
-            className="w-full px-4 py-3 bg-transparent border border-white rounded text-white placeholder-white/50 focus:outline-none focus:ring-1 focus:ring-white resize-vertical"
+            className="w-full px-4 py-3.5 bg-transparent border border-white rounded text-base text-white placeholder-white/50 focus:outline-none focus:ring-1 focus:ring-white resize-vertical"
           />
         </div>
         
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           <button
             onClick={handleSubmit}
-            className="px-6 py-3 bg-white text-black font-semibold rounded hover:bg-white/90 transition-colors uppercase tracking-wide text-sm"
+            className="px-6 py-3.5 bg-white text-black font-semibold rounded hover:bg-white/90 transition-colors uppercase tracking-wide text-base md:text-sm"
           >
             Send Message
           </button>
           <button
             onClick={handleReset}
-            className="px-6 py-3 border border-white text-white rounded hover:bg-white/10 transition-colors uppercase tracking-wide text-sm"
+            className="px-6 py-3.5 border border-white text-white rounded hover:bg-white/10 transition-colors uppercase tracking-wide text-base md:text-sm"
           >
             Reset
           </button>
         </div>
       </div>
       
-      <div className="flex gap-4 mt-8">
+      <div className="flex gap-4 mt-10">
         <a
           href="https://www.instagram.com/plane_paper_rick/"
           target="_blank"

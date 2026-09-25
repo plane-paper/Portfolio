@@ -230,7 +230,7 @@ const Portfolio = () => {
         )}
         
         {/* Main Content */}
-        <div className="relative z-10 min-h-screen flex flex-col items-center justify-between p-8 md:p-16">
+        <div className="relative z-10 min-h-screen flex flex-col items-center justify-between p-5 sm:p-8 md:p-16">
           
           {/* Home Header */}
           <AnimatePresence>
@@ -251,7 +251,7 @@ const Portfolio = () => {
                 exit={{ opacity: 0, y: 50 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
                 className="fixed inset-0 bg-gray-900/95 backdrop-blur-sm overflow-y-auto no-scrollbar"
-                style={{ paddingTop: '80px' }}
+                style={{ paddingTop: 'clamp(68px, 10vh, 80px)' }}
                 onClick={(e) => {
                   if (e.target === e.currentTarget && selectedProject === null) {
                     handleClose();
@@ -259,7 +259,7 @@ const Portfolio = () => {
                 }}
               >
                 {currentView !== 'work' || selectedProject === null ? (
-                  <div className="container mx-auto px-6 md:px-12 py-12 max-w-4xl no-scrollbar">
+                  <div className="container mx-auto px-5 sm:px-8 md:px-12 py-8 sm:py-12 max-w-4xl no-scrollbar min-h-full">
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={currentView}
