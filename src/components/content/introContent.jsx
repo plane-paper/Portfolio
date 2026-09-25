@@ -226,6 +226,7 @@ const IntroContent = () => {
                                 <ul className="list-disc list-outside ml-5 pl-2 space-y-1">
                                     <li>English and Mandarin - Native level</li>
                                     <li>French - Fluent level</li>
+                                    <li>Japanese, Cantonese - Basic level</li>
                                 </ul>
                             </div>
                         </AccordionContent>
