@@ -14,7 +14,7 @@ export const projects = [
       "Implemented payout dispatch behind a swappable payroll provider interface, with a CSV export for manual payroll processing and an Employment Hero integration.",
       "Built an individual mode on the same pipeline with personal spending history, filterable spending reports with charts and CSV/PDF export, item selection across receipts, and an LLM-generated, editable email or document that the user sends to an external payer.",
       "Kept the TypeScript frontend and Python backend in sync with a language-neutral OpenAPI contract that generates the TypeScript client, inside a polyglot monorepo (pnpm and Turborepo for JavaScript, uv for Python), with versioned Alembic database migrations and CI.",
-      "Wrote a detailed specification first, with numbered requirements, a data model, and a phased build plan that put the riskiest assumption, OCR accuracy on messy real-world receipts, at the front of the schedule."
+      '<a href="https://github.com/plane-paper/Reimburst" class="text-blue-300 hover:text-blue-200 underline">Click me for GitHub link</a>' 
     ]
   },
   {
