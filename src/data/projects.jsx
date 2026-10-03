@@ -1,9 +1,7 @@
 export const projects = [
   {
     title: "Reimburst",
-    description: "A web service that automates expense reimbursement end to end: photograph a receipt, and it extracts the details, categorizes each item, and either routes the request for approval or generates a request you can send yourself.",
-    // TODO: add images (e.g. a screenshot of the review screen or an architecture diagram)
-    images: ["images/pic20.png"],
+    description: "A web service that automates expense reimbursement end to end: photograph a receipt, and it extracts the details, categorizes each item, and either routes the request for approval or generates a request you can send yourself.",    images: ["images/pic20.png"],
     details: [
       "Built a full-stack reimbursement automation service (Next.js, TypeScript, FastAPI, PostgreSQL, Redis, Azure) that turns a photo of a receipt into a categorized, approvable expense request, usable end to end from a mobile browser as an installable PWA.",
       "Used computer vision/OCR through a cloud document-understanding service to extract the merchant, date, currency, total, tax, and every line item from receipt photos, behind a swappable OCR provider interface, with images kept in object storage and only a storage key persisted in the database.",
