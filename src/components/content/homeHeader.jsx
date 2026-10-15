@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion';
 import Typewriter from '../utility/typeWriter';
 
-const HomeHeader = ({ isLoading, onNavigate }) => {
+const HomeHeader = ({ isLoading, animateEntrance, onNavigate }) => {
   return (
     <motion.header 
-      initial="hidden"
-      animate={isLoading ? "hidden" : "visible"}
+      initial={animateEntrance ? "hidden" : false}
+      animate={isLoading && animateEntrance ? "hidden" : "visible"}
       exit="exit"
       className="w-full flex-1 flex flex-col items-center justify-center text-center"
     >
@@ -15,12 +15,9 @@ const HomeHeader = ({ isLoading, onNavigate }) => {
           visible: { 
             scale: 1, 
             opacity: 1,
-            transition: { 
-              type: "spring",
-              stiffness: 260,
-              damping: 20,
-              delay: 1.3
-            }
+            transition: animateEntrance
+              ? { type: "spring", stiffness: 260, damping: 20, delay: 1.3 }
+              : { duration: 0 }
           },
           exit: { 
             scale: 0.8, 
@@ -55,11 +52,9 @@ const HomeHeader = ({ isLoading, onNavigate }) => {
           visible: { 
             y: 0, 
             opacity: 1,
-            transition: { 
-              duration: 0.6,
-              ease: "easeOut",
-              delay: 1.6
-            }
+            transition: animateEntrance
+              ? { duration: 0.6, ease: "easeOut", delay: 1.6 }
+              : { duration: 0 }
           },
           exit: { 
             y: -20, 
@@ -86,13 +81,15 @@ const HomeHeader = ({ isLoading, onNavigate }) => {
           visible: { 
             y: 0, 
             opacity: 1,
-            transition: { 
-              duration: 0.6,
-              ease: "easeOut",
-              delay: 1.9,
-              staggerChildren: 0.1,
-              delayChildren: 0.2
-            }
+            transition: animateEntrance
+              ? {
+                  duration: 0.6,
+                  ease: "easeOut",
+                  delay: 1.9,
+                  staggerChildren: 0.1,
+                  delayChildren: 0.2
+                }
+              : { duration: 0 }
           },
           exit: { 
             y: -30, 
@@ -111,11 +108,9 @@ const HomeHeader = ({ isLoading, onNavigate }) => {
               visible: { 
                 scale: 1, 
                 opacity: 1,
-                transition: {
-                  type: "spring",
-                  stiffness: 400,
-                  damping: 17
-                }
+                transition: animateEntrance
+                  ? { type: "spring", stiffness: 400, damping: 17 }
+                  : { duration: 0 }
               }
             }}
             whileHover={{ scale: 1.05 }}

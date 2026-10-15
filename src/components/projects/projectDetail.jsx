@@ -1,14 +1,9 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef } from 'react';
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 
-const ProjectDetail = ({ project, onClose }) => {
+const ProjectDetail = ({ project, isClosing, onClose, onCloseComplete }) => {
   const videoRef = useRef(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, [project]);
 
   const handleVideoClick = (e) => {
     e.stopPropagation();
@@ -38,10 +33,15 @@ const ProjectDetail = ({ project, onClose }) => {
   return (
     <motion.div 
       initial={{ opacity: 0, y: 100 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -100 }}
-      transition={{ duration: 0.5 }}
-      className={`h-full p-8 overflow-y-auto no-scrollbar ${isVisible ? 'fade-in' : ''}`}
+      animate={isClosing ? { opacity: 0, y: 100 } : { opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeInOut" }}
+      onAnimationComplete={() => {
+        if (isClosing) onCloseComplete();
+      }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="h-full p-8 overflow-y-auto no-scrollbar"
     >
       <div className="max-w-4xl mx-auto">
         <div className="flex justify-between items-center mb-8">

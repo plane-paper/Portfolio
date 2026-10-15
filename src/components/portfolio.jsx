@@ -26,8 +26,10 @@ const Portfolio = () => {
   const [currentView, setCurrentView] = useState('home');
   const [isArticleVisible, setIsArticleVisible] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
+  const [isProjectClosing, setIsProjectClosing] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasOpenedSection, setHasOpenedSection] = useState(false);
   const [visitorCount, setVisitorCount] = useState(0);
 
   // Project navigation helpers
@@ -67,6 +69,7 @@ const Portfolio = () => {
 
   // Main screen navigation (with animation)
   const handleMainNavClick = (view) => {
+    setHasOpenedSection(true);
     setIsTransitioning(true);
     setCurrentView(view);
     setIsArticleVisible(true);
@@ -86,8 +89,32 @@ const Portfolio = () => {
 
   const handleClose = () => {
     setSelectedProject(null);
+    setIsProjectClosing(false);
     setIsArticleVisible(false);
     setCurrentView('home');
+  };
+
+  const handleProjectClose = () => {
+    if (selectedProject !== null && !isProjectClosing) {
+      setIsProjectClosing(true);
+    }
+  };
+
+  const handleProjectCloseComplete = () => {
+    if (!isProjectClosing) return;
+    setSelectedProject(null);
+    setIsProjectClosing(false);
+  };
+
+  const handleBorderClick = () => {
+    if (currentView === 'contact') return;
+
+    if (currentView === 'work' && selectedProject !== null) {
+      handleProjectClose();
+      return;
+    }
+
+    handleClose();
   };
 
   // Escape key handler
@@ -110,8 +137,16 @@ const Portfolio = () => {
       case 'work':
         if (selectedProject !== null) {
           return (
-            <div className="flex h-full">
-              <div className="w-24 bg-gray-900/50 backdrop-blur-sm border-r border-white/20 p-4 overflow-y-auto flex-shrink-0 overflow-x-hidden no-scrollbar">
+            <div className={`flex h-full ${isProjectClosing ? 'pointer-events-none' : ''}`}>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: isProjectClosing ? 0 : 1 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+                className="w-24 bg-gray-900/50 backdrop-blur-sm border-r border-white/20 p-4 overflow-y-auto flex-shrink-0 overflow-x-hidden no-scrollbar"
+                onClick={(e) => {
+                  if (e.target === e.currentTarget) handleProjectClose();
+                }}
+              >
                 {projects.map((project, index) => (
                   <ProjectTile 
                     key={index} 
@@ -122,12 +157,14 @@ const Portfolio = () => {
                     isSelected={selectedProject === index}
                   />
                 ))}
-              </div>
+              </motion.div>
               
               <div className="flex-1 overflow-hidden">
                 <ProjectDetail 
                   project={projects[selectedProject]} 
-                  onClose={() => setSelectedProject(null)}
+                  isClosing={isProjectClosing}
+                  onClose={handleProjectClose}
+                  onCloseComplete={handleProjectCloseComplete}
                 />
               </div>
             </div>
@@ -230,8 +267,9 @@ const Portfolio = () => {
           {/* Home Header */}
           <AnimatePresence>
             {!isArticleVisible && !isTransitioning && (
-              <HomeHeader 
+              <HomeHeader
                 isLoading={isLoading}
+                animateEntrance={!hasOpenedSection}
                 onNavigate={handleMainNavClick}
               />
             )}
@@ -248,9 +286,7 @@ const Portfolio = () => {
                 className="fixed inset-0 bg-gray-900/95 backdrop-blur-sm overflow-y-auto no-scrollbar"
                 style={{ paddingTop: 'clamp(68px, 10vh, 80px)' }}
                 onClick={(e) => {
-                  if (e.target === e.currentTarget && selectedProject === null) {
-                    handleClose();
-                  }
+                  if (e.target === e.currentTarget) handleBorderClick();
                 }}
               >
                 {currentView !== 'work' || selectedProject === null ? (
@@ -323,7 +359,7 @@ const Portfolio = () => {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
               className="fixed inset-0 bg-black/50 z-5"
-              onClick={handleClose}
+              onClick={handleBorderClick}
             />
           )}
         </AnimatePresence>
