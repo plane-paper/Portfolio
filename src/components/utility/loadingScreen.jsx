@@ -1,56 +1,105 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
-const LoadingScreen = () => {
-  const [loadingText, setLoadingText] = useState('');
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isComplete, setIsComplete] = useState(false);
-  const [charIndex, setCharIndex] = useState(0);
+const NAME = 'Richard';
 
-  useEffect(() => {
-    const fullText = 'Richard Su';
-    
-    const typeText = () => {
-      if (!isDeleting) {
-        if (charIndex < fullText.length) {
-          setLoadingText(fullText.substring(0, charIndex + 1));
-          setCharIndex(prev => prev + 1);
-        } else {
-          setTimeout(() => setIsDeleting(true), 300);
-        }
-      } else {
-        if (loadingText.length > 0) {
-          setLoadingText(prev => prev.substring(0, prev.length - 1));
-        } else {
-          setIsComplete(true);
-          setCharIndex(fullText.length);
-        }
-      }
-    };
+// The signature as unfilled pen strokes, in writing order. The first stroke
+// is the whole name in one continuous motion (R, then "ichard"); the second
+// is the dot over the "i". `len` is the approximate path length in SVG units
+// and is only used to pace the animation.
+const STROKES = [
+  { d: 'M54.0 190.0 C55.3 188.0 56.4 186.5 58.0 184.0 C60.6 180.0 64.6 174.3 68.0 168.0 C72.5 159.7 77.5 148.7 82.0 138.0 C86.9 126.2 91.6 112.5 96.0 100.0 C100.3 87.9 104.2 73.9 108.0 64.0 C110.8 56.9 111.9 50.0 116.0 46.0 C119.6 42.5 125.2 40.1 130.0 40.0 C135.1 39.9 142.7 42.3 146.0 46.0 C149.3 49.7 150.8 56.8 150.0 62.0 C149.1 67.5 144.4 73.4 140.0 78.0 C135.3 82.9 127.9 86.6 122.0 90.0 C116.6 93.1 110.0 95.7 106.0 98.0 C103.5 99.5 100.2 100.2 100.0 102.0 C99.7 104.6 106.2 109.6 110.0 113.0 C114.1 116.7 119.2 120.5 124.0 123.0 C128.5 125.4 133.8 127.4 138.0 128.0 C141.3 128.5 144.2 129.0 147.0 127.6 C150.7 125.8 153.7 119.5 156.8 115.6 C159.9 111.9 163.2 107.2 165.6 104.8 C167.0 103.4 168.5 101.5 169.2 101.8 C169.9 102.1 170.0 104.3 169.9 106.0 C169.6 108.8 167.0 113.3 165.9 116.8 C165.0 120.1 163.6 124.1 163.7 126.4 C163.8 127.7 164.1 129.3 164.8 129.5 C165.7 129.8 167.3 128.2 168.9 127.0 C171.3 125.0 174.5 121.2 177.4 118.0 C180.6 114.6 184.4 109.7 187.4 107.2 C189.3 105.5 191.0 104.8 192.7 103.6 C193.8 103.6 194.9 103.3 195.9 103.6 C196.7 103.8 197.6 104.4 198.1 105.2 C198.8 106.0 198.9 107.4 199.3 108.5 C198.9 107.4 198.8 106.0 198.1 105.2 C197.6 104.4 196.7 103.8 195.9 103.6 C194.9 103.3 193.8 103.6 192.7 103.6 C190.9 104.5 189.0 105.2 187.3 106.5 C185.4 108.0 183.6 110.1 182.2 112.2 C180.8 114.3 179.6 116.8 178.9 119.1 C178.3 121.2 177.9 123.6 178.2 125.4 C178.5 127.0 179.3 128.7 180.4 129.4 C181.4 130.2 182.8 130.2 184.4 130.1 C186.7 130.0 190.0 129.1 192.6 127.6 C195.6 125.8 198.1 122.4 200.9 119.2 C204.3 115.4 207.8 110.7 211.3 106.0 C215.2 100.8 219.4 94.6 223.1 89.2 C226.5 84.2 230.0 78.7 232.8 74.8 C234.8 72.0 236.5 69.3 238.2 67.6 C239.4 66.5 241.1 64.9 241.6 65.2 C242.2 65.5 241.9 68.0 241.4 70.0 C240.4 73.6 236.2 79.4 233.6 84.4 C230.7 89.8 227.6 95.8 224.7 101.2 C222.0 106.2 219.3 111.0 216.8 115.6 C214.6 119.8 211.5 125.3 210.6 127.6 C210.3 128.4 210.3 128.8 210.1 129.4 C210.3 128.8 210.3 128.4 210.6 127.6 C211.5 125.3 214.8 118.9 216.8 115.6 C218.3 113.2 219.4 111.4 221.2 109.6 C223.0 107.6 225.3 105.2 227.6 104.2 C229.6 103.4 232.3 103.0 233.9 103.6 C235.3 104.2 236.7 105.6 237.2 107.2 C237.8 109.3 236.3 112.8 235.4 115.6 C234.5 118.7 231.9 122.6 231.4 125.2 C231.1 126.8 230.8 129.0 231.5 129.4 C232.2 129.8 234.5 127.9 236.3 126.4 C239.3 124.0 243.3 119.1 246.8 115.6 C250.2 112.3 253.3 108.0 256.9 106.0 C259.8 104.4 263.1 104.4 266.1 103.6 C267.4 103.8 269.0 103.5 269.9 104.2 C270.9 104.9 271.4 106.7 271.5 108.2 C271.8 109.9 271.3 111.9 270.7 114.0 C270.1 116.7 268.7 120.2 267.6 122.8 C266.6 125.1 265.4 127.0 264.4 129.0 C264.3 127.8 264.8 125.7 264.3 125.4 C263.6 125.1 260.9 128.7 259.3 129.4 C258.1 130.0 256.7 130.5 255.6 130.2 C254.6 129.9 253.4 128.9 252.8 127.8 C252.2 126.5 252.3 124.3 252.5 122.5 C252.8 120.3 253.6 117.8 254.7 115.6 C255.7 113.4 257.2 111.0 258.8 109.1 C260.3 107.3 262.3 105.5 263.8 104.6 C264.7 104.0 265.4 103.9 266.1 103.6 C267.4 103.8 269.0 103.5 269.9 104.2 C270.9 104.9 271.4 106.7 271.5 108.2 C271.8 109.9 271.3 111.9 270.7 114.0 C270.1 116.7 268.7 120.2 267.6 122.8 C266.6 125.1 265.4 127.0 264.4 129.0 C265.8 128.2 267.1 127.7 268.7 126.4 C271.1 124.5 274.3 120.9 277.0 118.0 C280.0 114.9 283.5 110.9 285.9 108.4 C287.5 106.7 288.5 105.2 290.0 104.2 C291.4 103.3 292.9 102.5 294.4 102.4 C295.8 102.3 298.0 102.7 298.7 103.6 C299.4 104.5 299.1 106.2 298.7 107.8 C298.0 110.5 295.0 114.7 293.2 118.0 C291.5 121.1 288.5 124.9 288.3 127.0 C288.2 128.0 288.5 129.2 289.1 129.4 C289.9 129.7 292.1 127.8 293.9 126.4 C296.8 124.2 300.6 120.0 303.9 116.8 C307.3 113.6 310.7 109.5 314.0 107.2 C316.5 105.4 318.9 104.8 321.3 103.6 C322.6 103.8 324.2 103.5 325.1 104.2 C326.1 104.9 326.6 106.7 326.7 108.2 C327.0 109.7 326.3 111.6 326.1 113.3 C325.2 116.1 324.4 118.9 323.3 121.6 C322.2 124.2 320.8 126.6 319.6 129.0 C319.5 127.8 320.0 125.7 319.5 125.4 C318.8 125.1 316.1 128.7 314.5 129.4 C313.3 130.0 311.9 130.5 310.8 130.2 C309.8 129.9 308.6 128.9 308.0 127.8 C307.4 126.5 307.5 124.3 307.7 122.5 C308.0 120.3 308.8 117.8 309.9 115.6 C310.9 113.4 312.4 111.0 314.0 109.1 C315.5 107.3 317.5 105.5 319.0 104.6 C319.9 104.0 320.6 103.9 321.3 103.6 C322.6 103.8 324.2 103.5 325.1 104.2 C326.1 104.9 326.6 106.7 326.7 108.2 C327.0 109.7 326.3 111.6 326.1 113.3 C329.1 108.5 331.8 103.7 334.9 98.8 C338.1 93.7 341.7 88.2 345.1 83.2 C348.1 78.6 351.6 73.1 354.2 70.0 C355.8 68.1 357.3 65.8 358.4 65.8 C359.0 65.8 359.9 66.8 360.0 67.6 C360.1 69.0 357.8 71.3 356.3 73.6 C354.2 76.7 351.0 80.7 348.2 84.4 C345.1 88.3 341.4 92.4 338.3 96.4 C335.3 100.4 332.0 104.5 329.7 108.4 C327.7 111.7 326.4 114.7 324.8 118.0 C323.1 121.5 321.3 125.4 319.6 129.0 C320.5 129.3 321.4 129.8 322.5 129.8 C324.1 129.7 326.3 128.6 328.2 127.6 C330.5 126.4 332.8 124.4 335.0 122.8', len: 1232 },
+  { d: 'M 169.5 94.5 L 175.5 91.5', len: 6 },
+];
 
-    const speed = isDeleting ? 60 : 40;
-    const timer = setTimeout(typeText, speed);
+// ---- Timing (seconds) -------------------------------------------------
+const WRITE_SPEED = 750;  // SVG units per second while writing
+const ERASE_SPEED = 1700; // SVG units per second while erasing
+const PEN_LIFT = 0.12;    // pause before the dot
+const HOLD = 0.6;         // pause with the finished signature
 
-    return () => clearTimeout(timer);
-  }, [charIndex, isDeleting, loadingText]);
+// Build a start/end time for every stroke, for both writing and erasing.
+let cursor = 0;
+const timed = STROKES.map((s) => {
+  const duration = Math.max(s.len / WRITE_SPEED, 0.06);
+  const start = cursor;
+  cursor += duration + PEN_LIFT;
+  return { ...s, start, end: start + duration };
+});
 
-  if (isComplete) {
-    return <div className="fixed inset-0 bg-gray-900" />;
+const WRITE_END = cursor - PEN_LIFT;
+let eraseCursor = WRITE_END + HOLD;
+timed.forEach((s) => {
+  const duration = Math.max(s.len / ERASE_SPEED, 0.05);
+  s.eraseStart = eraseCursor;
+  s.eraseEnd = eraseCursor + duration;
+  eraseCursor += duration;
+});
+const TOTAL = eraseCursor;
+
+const LoadingScreen = ({ onComplete }) => {
+  const reduceMotion = useReducedMotion();
+
+  // Fires once the signature has been written AND erased.
+  const finish = () => onComplete?.();
+
+  // Respect reduced-motion: show the name briefly, no drawing/erasing.
+  if (reduceMotion) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: [0, 1, 1, 0] }}
+        transition={{ duration: 1.6, times: [0, 0.25, 0.75, 1] }}
+        onAnimationComplete={finish}
+        className="fixed inset-0 bg-gray-900 flex items-center justify-center z-50"
+      >
+        <h1 className="text-4xl text-white font-light tracking-wider">{NAME}</h1>
+      </motion.div>
+    );
   }
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
       className="fixed inset-0 bg-gray-900 flex items-center justify-center z-50"
     >
-      <div className="text-center">
-        <h1 className="text-4xl md:text-6xl font-light text-white uppercase tracking-wider">
-          {loadingText}
-          <span className="animate-pulse">|</span>
-        </h1>
-      </div>
+      <svg
+        viewBox="38 26 340 182"
+        className="w-[80vw] max-w-2xl h-auto"
+        role="img"
+        aria-label={NAME}
+        fill="none"
+        stroke="white"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      >
+        {timed.map((s, i) => (
+          <motion.path
+            key={i}
+            d={s.d}
+            initial={{ pathLength: 0, pathOffset: 0 }}
+            animate={{
+              // nothing → drawn (write) → drawn (hold) → un-drawn (erase)
+              pathLength: [0, 0, 1, 1, 1, 1],
+              pathOffset: [0, 0, 0, 0, 1, 1],
+            }}
+            transition={{
+              duration: TOTAL,
+              ease: 'linear',
+              times: [
+                0,
+                s.start / TOTAL,
+                s.end / TOTAL,
+                s.eraseStart / TOTAL,
+                s.eraseEnd / TOTAL,
+                1,
+              ],
+            }}
+            onAnimationComplete={i === timed.length - 1 ? finish : undefined}
+          />
+        ))}
+      </svg>
     </motion.div>
   );
 };

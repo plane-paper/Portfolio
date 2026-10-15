@@ -190,7 +190,7 @@ const Portfolio = () => {
       <div className="fixed inset-0 bg-gray-900 z-0" />
       
       <AnimatePresence>
-        {isLoading && <LoadingScreen />}
+        {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
       </AnimatePresence>
       
       <motion.div 

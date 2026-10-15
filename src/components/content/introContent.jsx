@@ -12,7 +12,7 @@ const IntroContent = () => {
                     <p className="text-base md:text-base text-white/90 leading-8">
                         Hello! I'm a passionate full-stack and software developer studying Electrical & Computer Engineering at the University of Waterloo. 
                         <br />
-                        I love building stuff! I work mostly with fullstack web dev, focusing on backend, infra, and some agent stuff. I can also do other things, like embedded, optimization, CICD, etc. Check out my projects page for more information. I also frequently compete in hackathons and engineering competitions, and I've won multiple awards.
+                        I love building stuff! I work mostly with fullstack web dev, focusing on backend, infra, and some AI agent stuff. I can also do other things, like embedded, optimization, CICD, etc. Check out my projects page for more information. I also frequently compete in hackathons and engineering competitions, winning some awards.
                         <br />
                         I have a multicultural background, having been raised in two countries during my childhood. I'm also eager to learn! Currently, I can speak 3 languages (English and Mandarin fluently, French at a conversational level) and am actively learning Japanese and Cantonese.
                         <br />
