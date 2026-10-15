@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion } from 'framer-motion';
-import { X, ArrowUpRight, Play } from 'lucide-react';
+import { X, ArrowUpRight, Play, ChevronLeft, ChevronRight } from 'lucide-react';
 
 /* ---------------------------------------------------------------------------
  * Backwards compatibility
@@ -81,32 +81,57 @@ const Gallery = ({ title, images = [], video }) => {
   const [active, setActive] = useState(0);
   const [zoomed, setZoomed] = useState(null);
   const current = items[active] ?? items[0];
+  const showPrevious = () => setActive((index) => (index - 1 + items.length) % items.length);
+  const showNext = () => setActive((index) => (index + 1) % items.length);
 
   return (
     <div>
-      {current.type === 'image' ? (
-        <button
-          type="button"
-          onClick={() => setZoomed(current.src)}
-          aria-label="View image full size"
-          className="block mx-auto max-w-full rounded-lg cursor-zoom-in focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400"
-        >
-          <img
-            src={current.src}
-            alt={`${title} ${active + 1}`}
-            className="block max-w-full max-h-[60vh] w-auto rounded-lg shadow-2xl"
-          />
-        </button>
-      ) : (
-        <video
-          key={current.src}
-          controls
-          className="block mx-auto max-w-full max-h-[60vh] rounded-lg bg-black shadow-2xl"
-        >
-          <source src={current.src} type="video/mp4" />
-          Your browser does not support video.
-        </video>
-      )}
+      <div className="relative group w-fit max-w-full mx-auto">
+        {current.type === 'image' ? (
+          <button
+            type="button"
+            onClick={() => setZoomed(current.src)}
+            aria-label="View image full size"
+            className="block max-w-full rounded-lg cursor-zoom-in focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400"
+          >
+            <img
+              src={current.src}
+              alt={`${title} ${active + 1}`}
+              className="block max-w-full max-h-[60vh] w-auto rounded-lg shadow-2xl"
+            />
+          </button>
+        ) : (
+          <video
+            key={current.src}
+            controls
+            className="block max-w-full max-h-[60vh] rounded-lg bg-black shadow-2xl"
+          >
+            <source src={current.src} type="video/mp4" />
+            Your browser does not support video.
+          </video>
+        )}
+
+        {items.length > 1 && (
+          <>
+            <button
+              type="button"
+              onClick={showPrevious}
+              aria-label="Show previous media"
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 text-white flex items-center justify-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button
+              type="button"
+              onClick={showNext}
+              aria-label="Show next media"
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 text-white flex items-center justify-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </>
+        )}
+      </div>
 
       {items.length > 1 && (
         <div className="flex flex-wrap justify-center gap-2 mt-4">

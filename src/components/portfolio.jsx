@@ -152,9 +152,6 @@ const Portfolio = () => {
                 animate={{ opacity: isProjectClosing ? 0 : 1 }}
                 transition={{ duration: 0.5, ease: "easeInOut" }}
                 className="w-24 bg-gray-900/50 backdrop-blur-sm border-r border-white/20 p-4 overflow-y-auto flex-shrink-0 overflow-x-hidden no-scrollbar"
-                onClick={(e) => {
-                  if (e.target === e.currentTarget) handleProjectClose();
-                }}
               >
                 {projects.map((project, index) => (
                   <ProjectTile 
