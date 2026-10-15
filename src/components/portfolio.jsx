@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Utility Components
@@ -21,6 +21,7 @@ import HomeHeader from './content/homeHeader';
 // Data
 import { projects } from '../data/projects';
 import DecryptedText from './ui/decyptedText';
+import { preloadPortfolioContent } from './utility/contentPreloader';
 
 const Portfolio = () => {
   const [currentView, setCurrentView] = useState('home');
@@ -31,6 +32,7 @@ const Portfolio = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasOpenedSection, setHasOpenedSection] = useState(false);
   const [visitorCount, setVisitorCount] = useState(0);
+  const hasStartedPreloading = useRef(false);
 
   // Project navigation helpers
   const [searchQuery, setSearchQuery] = useState('');
@@ -39,6 +41,13 @@ const Portfolio = () => {
   // NOTE: the old 1400ms loading timer was removed. The loading screen now
   // ends itself: <LoadingScreen onComplete={...} /> below calls
   // setIsLoading(false) once the signature has been written and erased.
+  const handleLoadingComplete = () => {
+    setIsLoading(false);
+    if (!hasStartedPreloading.current) {
+      hasStartedPreloading.current = true;
+      void preloadPortfolioContent();
+    }
+  };
 
   // Visitor count effect
   useEffect(() => {
@@ -222,7 +231,7 @@ const Portfolio = () => {
       <div className="fixed inset-0 bg-gray-900 z-0" />
       
       <AnimatePresence>
-        {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
+        {isLoading && <LoadingScreen onComplete={handleLoadingComplete} />}
       </AnimatePresence>
       
       <motion.div 
