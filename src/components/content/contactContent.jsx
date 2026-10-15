@@ -1,33 +1,80 @@
-const ContactContent = () => {
-  const handleSubmit = async () => {
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const message = document.getElementById('message').value;
-    const subject = document.getElementById('subject').value;
+import { useState } from 'react';
 
-    const payload = { name, email, subject, message };
+const ContactContent = () => {
+  const [fields, setFields] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  });
+  const [emailIsValid, setEmailIsValid] = useState(null);
+  const [sendSuccess, setSendSuccess] = useState(false);
+  const [fieldsClearing, setFieldsClearing] = useState(false);
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFields((currentFields) => ({ ...currentFields, [name]: value }));
+    setSendSuccess(false);
+
+    if (name === 'email') {
+      setEmailIsValid(null);
+    }
+  };
+
+  const handleEmailBlur = () => {
+    const email = fields.email.trim();
+    setEmailIsValid(email ? /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) : null);
+  };
+
+  const canSubmit =
+    Object.values(fields).every((value) => value.trim().length > 0) &&
+    emailIsValid === true;
+
+  const showSendSuccess = () => {
+    setFieldsClearing(true);
+  };
+
+  const handleSubmit = async () => {
+    if (!canSubmit) return;
 
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(fields),
       });
 
       if (res.ok) {
-        alert('Message sent successfully!');
+        showSendSuccess();
       } else {
-        alert('Failed to send message.');
+        const responseBody = await res.text();
+        console.error('Contact form request failed:', {
+          status: res.status,
+          statusText: res.statusText,
+          responseBody,
+        });
+        alert('Failed to send message. Check the browser console for details.');
       }
     } catch (err) {
+      console.error('Error sending contact form request:', err);
       alert('Error sending message. Please try again.');
     }
   };
 
   const handleReset = () => {
-    document.getElementById('name').value = '';
-    document.getElementById('email').value = '';
-    document.getElementById('message').value = '';
+    setFields({ name: '', email: '', subject: '', message: '' });
+    setEmailIsValid(null);
+    setSendSuccess(false);
+    setFieldsClearing(false);
+  };
+
+  const handleFieldsClearAnimationEnd = (event) => {
+    if (event.target !== event.currentTarget) return;
+
+    setFields({ name: '', email: '', subject: '', message: '' });
+    setEmailIsValid(null);
+    setFieldsClearing(false);
+    setSendSuccess(true);
   };
 
   return (
@@ -43,6 +90,10 @@ const ContactContent = () => {
       </p>
       
       <div className="space-y-6">
+        <div
+          className={`space-y-6 ${fieldsClearing ? 'contact-fields-clearing' : ''}`}
+          onAnimationEnd={handleFieldsClearAnimationEnd}
+        >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label htmlFor="name" className="block text-white text-base md:text-sm font-medium mb-2 uppercase tracking-wide">
@@ -52,6 +103,9 @@ const ContactContent = () => {
               type="text"
               name="name"
               id="name"
+              value={fields.name}
+              onChange={handleChange}
+              placeholder="Jane Doe"
               className="w-full px-4 py-3.5 bg-transparent border border-white rounded text-base text-white placeholder-white/50 focus:outline-none focus:ring-1 focus:ring-white"
             />
           </div>
@@ -63,8 +117,21 @@ const ContactContent = () => {
               type="email"
               name="email"
               id="email"
-              className="w-full px-4 py-3.5 bg-transparent border border-white rounded text-base text-white placeholder-white/50 focus:outline-none focus:ring-1 focus:ring-white"
+              value={fields.email}
+              onChange={handleChange}
+              onBlur={handleEmailBlur}
+              placeholder="john@example.com"
+              aria-invalid={emailIsValid === false}
+              aria-describedby={emailIsValid === false ? 'email-error' : undefined}
+              className={`w-full px-4 py-3.5 bg-transparent border rounded text-base text-white placeholder-white/50 focus:outline-none focus:ring-1 focus:ring-white ${
+                emailIsValid === false ? 'border-red-500' : 'border-white'
+              }`}
             />
+            {emailIsValid === false && (
+              <p id="email-error" role="alert" className="mt-2 text-sm text-red-400">
+                Invalid email
+              </p>
+            )}
           </div>
         </div>
 
@@ -76,6 +143,9 @@ const ContactContent = () => {
               type="text"
               name="subject"
               id="subject"
+              value={fields.subject}
+              onChange={handleChange}
+              placeholder="I love hard boiled eggs!"
               className="w-full px-4 py-3.5 bg-transparent border border-white rounded text-base text-white placeholder-white/50 focus:outline-none focus:ring-1 focus:ring-white"
             />
         </div>
@@ -88,23 +158,42 @@ const ContactContent = () => {
             name="message"
             id="message"
             rows={4}
+            value={fields.message}
+            onChange={handleChange}
+            placeholder="Hi Richard, I also love hard boiled eggs. Let's get together and talk about them!"
             className="w-full px-4 py-3.5 bg-transparent border border-white rounded text-base text-white placeholder-white/50 focus:outline-none focus:ring-1 focus:ring-white resize-vertical"
           />
         </div>
+        </div>
         
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-          <button
-            onClick={handleSubmit}
-            className="px-6 py-3.5 bg-white text-black font-semibold rounded hover:bg-white/90 transition-colors uppercase tracking-wide text-base md:text-sm"
-          >
-            Send Message
-          </button>
-          <button
-            onClick={handleReset}
-            className="px-6 py-3.5 border border-white text-white rounded hover:bg-white/10 transition-colors uppercase tracking-wide text-base md:text-sm"
-          >
-            Reset
-          </button>
+        <div className="space-y-3">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <button
+              onClick={handleSubmit}
+              disabled={!canSubmit || fieldsClearing}
+              aria-label={sendSuccess ? 'Sent successfully!' : undefined}
+              className="px-6 py-3.5 bg-white text-black font-semibold rounded hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white transition-colors uppercase tracking-wide text-base md:text-sm"
+            >
+              {sendSuccess ? (
+                <svg className="w-5 h-5 mx-auto" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path className="contact-checkmark" d="m5 12 4 4L19 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              ) : (
+                'Send Message'
+              )}
+            </button>
+            <button
+              onClick={handleReset}
+              className="px-6 py-3.5 border border-white text-white rounded hover:bg-white/10 transition-colors uppercase tracking-wide text-base md:text-sm"
+            >
+              Reset
+            </button>
+          </div>
+          {sendSuccess && (
+            <p role="status" className="contact-success-message text-sm text-green-400">
+              Sent successfully!
+            </p>
+          )}
         </div>
       </div>
       

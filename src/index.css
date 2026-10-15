@@ -58,3 +58,50 @@
     transform: translateY(-6px);
   }
 }
+
+@keyframes contact-fields-clear {
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes contact-checkmark-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes contact-success-appear {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.contact-fields-clearing {
+  animation: contact-fields-clear 250ms ease-in forwards;
+}
+
+.contact-checkmark {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: contact-checkmark-draw 350ms ease-out 100ms forwards;
+}
+
+.contact-success-message {
+  animation: contact-success-appear 250ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-fields-clearing,
+  .contact-checkmark,
+  .contact-success-message {
+    animation-duration: 1ms;
+    animation-delay: 0ms;
+  }
+}
