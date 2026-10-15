@@ -1,144 +1,304 @@
+// Project shape (everything except title is optional):
+// {
+//   title, description,
+//   tech:       ['Next.js', ...],
+//   links:      [{ label, href }],
+//   highlights: ['...'],                       // 1-3 skimmable lines
+//   sections:   [{ heading, points: ['...'] }], // grouped details (use for 6+ bullets)
+//   details:    ['...'],                       // flat list, used when there are no sections
+//   images:     ['images/x.png'],
+//   video:      'images/x.mp4',
+// }
+
 export const projects = [
   {
     title: "Reimburst",
-    description: "A web service that automates expense reimbursement end to end: photograph a receipt, and it extracts the details, categorizes each item, and either routes the request for approval or generates a request you can send yourself.",    images: ["images/pic20.png"],
-    details: [
-      "Built a full-stack reimbursement automation service (Next.js, TypeScript, FastAPI, PostgreSQL, Redis, Azure) that turns a photo of a receipt into a categorized, approvable expense request, usable end to end from a mobile browser as an installable PWA.",
-      "Used computer vision/OCR through a cloud document-understanding service to extract the merchant, date, currency, total, tax, and every line item from receipt photos, behind a swappable OCR provider interface, with images kept in object storage and only a storage key persisted in the database.",
-      "Categorized each line item with an LLM constrained to a fixed expense taxonomy through structured output, flagged low-confidence items for human review, and generated a natural-language synopsis of each request. Users review and edit the extracted breakdown before anything is submitted.",
-      "Built an asynchronous processing pipeline with FastAPI, Redis, and background workers, so extraction, categorization, and synopsis generation run as jobs and never block a request, with explicit pending, success, and retryable-error states in the UI.",
-      "Implemented the reimbursement workflow as a state machine (draft, submitted, approved, paid, with rejection) and role-based access control for individual users, employees, approvers, and admins, including rules such as no self-approval, an approver queue, notifications on key transitions, and a human-readable audit trail.",
-      "Engineered for financial integrity: all money is stored as integer cents with explicit currency codes, a reconciliation check blocks submission when line items don't add up to the receipt total, every state change is written to an immutable append-only audit log, and payout processing is idempotent so retries can never double-pay.",
-      "Implemented payout dispatch behind a swappable payroll provider interface, with a CSV export for manual payroll processing and an Employment Hero integration.",
-      "Built an individual mode on the same pipeline with personal spending history, filterable spending reports with charts and CSV/PDF export, item selection across receipts, and an LLM-generated, editable email or document that the user sends to an external payer.",
-      "Kept the TypeScript frontend and Python backend in sync with a language-neutral OpenAPI contract that generates the TypeScript client, inside a polyglot monorepo (pnpm and Turborepo for JavaScript, uv for Python), with versioned Alembic database migrations and CI.",
-      '<a href="https://github.com/plane-paper/Reimburst" class="text-blue-300 hover:text-blue-200 underline">Click me for GitHub link</a>' 
-    ]
+    description:
+      "A web service that automates expense reimbursement end to end: photograph a receipt, and it extracts the details, categorizes each item, and either routes the request for approval or generates a request you can send yourself.",
+    images: ["images/pic20.png"],
+    tech: ["Next.js", "TypeScript", "FastAPI", "PostgreSQL", "Redis", "Azure"],
+    links: [{ label: "GitHub", href: "https://github.com/plane-paper/Reimburst" }],
+    highlights: [
+      "Receipt photo to categorized expense in one flow",
+      "OCR and LLM pipeline integrated asynchronously with human review",
+      "Idempotent payouts and an append-only audit log for financial security",
+    ],
+    sections: [
+      {
+        heading: "Receipt processing",
+        points: [
+          "Extracts merchant, date, currency, total, tax, and every line item from receipt photos through a swappable cloud OCR provider. Images stay in object storage; only a key is stored in the database.",
+          "An LLM constrained to a fixed expense taxonomy (structured output) categorizes each item, flags low-confidence ones for review, and writes a synopsis. Users edit the breakdown before submitting.",
+          "FastAPI, Redis, and background workers run extraction, categorization, and synopsis as jobs that never block a request, with explicit pending, success, and retryable-error states in the UI.",
+        ],
+      },
+      {
+        heading: "Approval workflow and payouts",
+        points: [
+          "Reimbursements move through a state machine: draft, submitted, approved, paid, plus rejection. Key transitions send notifications and leave a human-readable audit trail.",
+          "Role-based access for individuals, employees, approvers, and admins, with rules like no self-approval and a dedicated approver queue.",
+          "Payout dispatch sits behind a swappable payroll provider interface, with CSV export for manual payroll and an Employment Hero integration.",
+        ],
+      },
+      {
+        heading: "Financial integrity",
+        points: [
+          "All money is stored as integer cents with explicit currency codes.",
+          "A reconciliation check blocks submission when line items don't add up to the receipt total.",
+          "Every state change is written to an immutable, append-only audit log.",
+          "Payout processing is idempotent, so retries can never double-pay.",
+        ],
+      },
+      {
+        heading: "Individual mode and platform",
+        points: [
+          "Individual mode reuses the same pipeline: spending history, filterable reports with charts and CSV/PDF export, item selection across receipts, and an editable LLM-drafted email or document to send to an external payer.",
+          "Installable PWA, usable end to end from a mobile browser.",
+          "An OpenAPI contract generates the TypeScript client, keeping frontend and backend in sync inside a polyglot monorepo (pnpm, Turborepo, uv), with versioned Alembic migrations and CI.",
+        ],
+      },
+    ],
   },
+
   {
     title: "SnapLearn",
     images: ["images/pic16.png", "images/pic17.png", "images/pic18.png"],
-    details: [
-      "Built an app with Next.js and Flask to take in a textbook uploaded by the user using PyMuPDF and the time they plan to study every day, and regenerate the topics the textbook covered into a curriculum that fits the user's schedule using NLP techniques.",
-      "Designed a Python algorithm that takes in any variety of topics, and uses NLP techniques, as well as cosine similarity search, to determine their dependency relationship in learning, and creates a directed acyclic graph.",
-      "Trained a small-sized language model to estimate the time needed for an average person to study a certain topic with all pre-requisite knowledge acquired.",
-      "Developed a greedy algorithm to fit the course content into the user's schedule, while also balancing it with practice sessions. Then used an LLM to generate the course content with the specified length.",
-      "Used Auth0 to implement storage of user login and authorization, and used PostgreSQL to store user data, including progress, course information, etc.",
-      "Used Docker to containerize the entire application for easy deployment.",
-      '<a href="https://github.com/plane-paper/SnapLearn" class="text-blue-300 hover:text-blue-200 underline">Click me for GitHub link</a>' 
-    ]
+    tech: ["Next.js", "Flask", "PostgreSQL", "Auth0", "Docker", "PyMuPDF", "NLP"],
+    links: [{ label: "GitHub", href: "https://github.com/plane-paper/SnapLearn" }],
+    highlights: [
+      "Turns an uploaded textbook into a study plan that fits your daily schedule",
+      "Infers prerequisite relationships between topics with NLP and cosine similarity",
+      "Small language model trained to estimate study time per topic",
+    ],
+    sections: [
+      {
+        heading: "Curriculum generation",
+        points: [
+          "Next.js and Flask app that takes a textbook uploaded by the user (parsed with PyMuPDF) and the time they plan to study each day, then regenerates the textbook's topics into a curriculum that fits their schedule using NLP.",
+          "Python algorithm uses NLP and cosine similarity search to work out how any set of topics depends on each other, and builds a directed acyclic graph from the result.",
+        ],
+      },
+      {
+        heading: "Scheduling and content",
+        points: [
+          "Trained a small language model to estimate how long an average person needs to study a topic once all prerequisite knowledge is acquired.",
+          "A greedy algorithm fits the course content into the user's schedule while balancing it with practice sessions. An LLM then generates the content at the specified length.",
+        ],
+      },
+      {
+        heading: "Accounts and deployment",
+        points: [
+          "Auth0 handles login and authorization, and PostgreSQL stores user data including progress and course information.",
+          "Docker containerizes the entire application for easy deployment.",
+        ],
+      },
+    ],
   },
+
   {
     title: "QuickSilver",
     images: ["images/pic12.jpg", "images/pic19.jpg"],
-    details: [
-      "Built a broadcaster that sends the IP address, name, OS, MAC, and broadcast time in JSON format to every machine in the LAN, and a receiver that listens for all broadcasts on the LAN and organizes the information received based on OS types before returning it to the user.",
-      "Built a file sending and receiving system via a TCP connection that allows the user to freely choose the target device (any broadcasting device in the LAN) and target file on the sender end, and a system to validate the file on the receiver end.",
-      "Developed an alternative system via Bluetooth to accommodate situations without internet connection that sends and receives files via an RFCOMM port, and retains the same functionalities as the TCP system.",
-      "Developed several mechanisms to prevent users from misusing the product, including simple malware detection, encryption, etc.",
-      "Designed & built an UI with Tkinter that allows more user-friendly interactions.",
-      "Ensured the scalability of the project by maintaining its compatibility and minimizing its dependencies, while also ensuring its decentralized nature, such as that with the broadcaster.",
-      '<a href="https://github.com/plane-paper/Quicksilver" class="text-blue-300 hover:text-blue-200 underline">Click me for GitHub link</a>'
-    ]
+    tech: ["Python", "Tkinter", "TCP", "Bluetooth (RFCOMM)"],
+    links: [{ label: "GitHub", href: "https://github.com/plane-paper/Quicksilver" }],
+    highlights: [
+      "Discovers every device on the LAN and sends files between them",
+      "Bluetooth fallback for when there's no internet connection",
+      "Decentralized, with minimal dependencies",
+    ],
+    sections: [
+      {
+        heading: "Discovery and file transfer",
+        points: [
+          "A broadcaster sends its IP address, name, OS, MAC, and broadcast time as JSON to every machine on the LAN. A receiver listens for all broadcasts and organizes them by OS before returning them to the user.",
+          "TCP file transfer lets the sender freely choose any broadcasting device and any file, and the receiver validates the file.",
+          "A Bluetooth alternative sends and receives files over an RFCOMM port for situations without internet, with the same functionality as the TCP system.",
+        ],
+      },
+      {
+        heading: "Safety and design",
+        points: [
+          "Several safeguards against misuse, including simple malware detection and encryption.",
+          "A Tkinter UI for more user-friendly interaction.",
+          "Built to scale: compatibility is maintained, dependencies are minimized, and the design stays decentralized, as with the broadcaster.",
+        ],
+      },
+    ],
   },
+
   {
     title: "KnowledgeHunt",
     images: ["images/pic15.jpg"],
+    tech: ["Python", "NLP", "Tkinter"],
+    links: [{ label: "GitHub", href: "https://github.com/plane-paper/KnowledgeHunt" }],
+    highlights: [
+      "Donated to Vision Academy Ltd., a tutoring organization with over 10,000 students",
+    ],
     details: [
-      "Developed a Python-based NLP algorithm that selects relevant PDF pages based on keywords inputted by users, specifically by vectorizing the PDFs and keywords, then computing their cosine similarity",
-      "Designed a UI with Tkinter that allows users to select the question bank to source the PDFs from, and the topics to focus on, thus creating an automatic question bank build tool for any educational system.",
-      "Built an alternative seeking algorithm independent of NLP to ensure that the functionalities could remain if the NLP algorithm fails.",
-      "Included a status report to ensure that the user is properly informed of the functionality of the application.",
-      "Created a default question bank for the International Baccalaureate system and donated the resulting curated software to Vision Academy Ltd., a tutoring organization with over 10,000 students.",
-      '<a href="https://github.com/plane-paper/KnowledgeHunt" class="text-blue-300 hover:text-blue-200 underline">Click me for GitHub link</a>'
-    ]
+      "Developed a Python NLP algorithm that selects relevant PDF pages based on user-entered keywords, by vectorizing the PDFs and keywords and computing their cosine similarity.",
+      "Designed a Tkinter UI where users pick the question bank to source PDFs from and the topics to focus on, creating an automatic question bank build tool for any educational system.",
+      "Built an alternative seeking algorithm independent of NLP, so the core functionality remains if the NLP algorithm fails.",
+      "Included a status report so the user is always informed of how the application is functioning.",
+      "Created a default question bank for the International Baccalaureate system and donated the finished software to Vision Academy Ltd.",
+    ],
   },
+
   {
     title: "Cat Feeder",
     images: ["images/pic02.jpg"],
+    tech: ["Python", "OpenCV", "TensorFlow", "Raspberry Pi", "3D printing"],
+    links: [{ label: "GitHub", href: "https://github.com/plane-paper/Catfeeder" }],
     details: [
-      "Designed & 3D printed the cat feeder as pictured above.",
-      "Used OpenCV Python and ImUtils to program a motion capture mechanism based on the camera integrated within the Raspberry Pi set by counting contours.",
-      "Used Tensorflow to train an AI based on over 10,000 images to distinguish cats within the captured frame once motion is detected, which then controls the DC servo motor that dispenses food.",
-      "Designed a door mechanism that covers the top of the feeder to allow easy refilling of food.",
-      "Wrote a clear README document to allow the average person to program and build the catfeeder with adequate supplies.",
-      '<a href="https://github.com/plane-paper/Catfeeder" class="text-blue-300 hover:text-blue-200 underline">Click me for Github link</a>'
-    ]
+      "Designed and 3D printed the cat feeder as pictured above.",
+      "Used OpenCV (Python) and ImUtils to program a motion capture mechanism on the Raspberry Pi's integrated camera by counting contours.",
+      "Trained a TensorFlow model on over 10,000 images to distinguish cats within the captured frame once motion is detected, which then controls the DC servo motor that dispenses food.",
+      "Designed a door mechanism that covers the top of the feeder to allow easy refilling.",
+      "Wrote a clear README so the average person can program and build the cat feeder with adequate supplies.",
+    ],
   },
+
   {
     title: "WatIsLife",
     images: ["images/pic13.jpg"],
+    tech: ["Google Speech", "React", "OAuth", "Discord API"],
+    links: [
+      { label: "API on GitHub", href: "https://github.com/plane-paper/WatIsLife" },
+      { label: "Discord bot on GitHub", href: "https://github.com/plane-paper/WatIsLife-Discord" },
+    ],
     details: [
-      "Developed a web API that records the user's speech and uses Google Speech Module to count how many times a certain phrase was said and stores the count in a database.",
-      "Built a simple React front-end that displays a leaderboard for all users based on the number of times the phrase has been said.",
-      "Collaborated with a friend to build an OAuth system that allows users to login and logout of accounts freely.",
-      "Built a Discord bot using the Discord API to achieve the same functionalities, with a few built-in commands to ensure that it is user-friendly.",
-      '<a href="https://github.com/plane-paper/WatIsLife" class="text-blue-300 hover:text-blue-200 underline">Click me for API Github link</a>',
-      '<a href="https://github.com/plane-paper/WatIsLife-Discord" class="text-blue-300 hover:text-blue-200 underline">Click me for Discord Bot GitHub link</a>'
-    ]
+      "Developed a web API that records the user's speech, uses the Google Speech module to count how many times a certain phrase was said, and stores the count in a database.",
+      "Built a simple React front end that displays a leaderboard of all users by the number of times the phrase has been said.",
+      "Collaborated with a friend to build an OAuth system that lets users log in and out of accounts freely.",
+      "Built a Discord bot using the Discord API to offer the same functionality, with a few built-in commands to keep it user-friendly.",
+    ],
   },
+
   {
     title: "Admission Database",
     images: ["images/pic04.jpg"],
+    tech: ["PostgreSQL", "Python", "HTML5", "PHP", "JavaScript"],
+    highlights: [
+      "Still serves the entire Rothesay Netherwood School",
+    ],
     details: [
-      "Built a database using PostgreSQL, Python, H5, PHP, and JS to store & access the admissions data of my highschool.",
-      "Designed an UI, as well as a password system, for users accessing the database. Integrated a identification mechanism within the system to differentiate information displayed and accessible by the user based on the identity of the user.",
-      "Improved the aesthetics and relevant features to be up to school standard and synchronized with various other systems over the course of a year.",
-      "The database continues to serve the entire Rothesay Netherwood School."
-    ]
+      "Built a database using PostgreSQL, Python, HTML5, PHP, and JS to store and access my high school's admissions data.",
+      "Designed a UI and a password system for users accessing the database, with an identification mechanism that changes the information displayed and accessible based on who the user is.",
+      "Improved the aesthetics and features over the course of a year to meet school standards and synchronize with various other school systems.",
+    ],
   },
+
   {
     title: "Speech Recognition Glasses",
     images: ["images/pic05.jpg", "images/pic06.jpg"],
+    tech: ["Python", "Arduino", "Google Speech", "3D printing"],
+    links: [
+      {
+        label: "GitHub (speech recognition program only)",
+        href: "https://github.com/plane-paper/speech-recog",
+      },
+    ],
+    highlights: [
+      "Tested with patients with dysgraphia and received positive feedback",
+    ],
     details: [
-      "Developed a Python and Arduino-based program based on the Google Speech Module that recognizes English speech and outputs it onto a LCD unit, which projects the display onto an anti-glare visor, achieving an AR-like effect.",
-      "Improved the design of the 3D-printed glasses framework with the help of a friend to incorporate the electronic parts.",
+      "Developed a Python and Arduino program, based on the Google Speech module, that recognizes English speech and outputs it onto an LCD unit, which projects the display onto an anti-glare visor for an AR-like effect.",
+      "Improved the design of the 3D-printed glasses frame, with a friend's help, to incorporate the electronic parts.",
       "Tested the product on patients with dysgraphia, who previously struggled to put words onto a page, and received positive feedback.",
-      '<a href="https://github.com/plane-paper/speech-recog" class="text-blue-300 hover:text-blue-200 underline">Click me for GitHub link (speech recognition program only)</a>'
-    ]
+    ],
   },
+
   {
     title: "YourSweeper",
     images: ["images/pic14.jpg"],
+    tech: ["Python", "OpenCV", "NumPy", "PyAutoGUI"],
+    links: [{ label: "GitHub", href: "https://github.com/plane-paper/YourSweeper" }],
     details: [
-      "Built a screen detection algorithm that automatically seeks the Minesweeper window on screen by matching the grayscale screenshot with an existing template using OpenCV, then computing the grids using contour tracing.",
-      "Developed a solver algorithm that automatically seeks safe squares to be clicked on by listing the status of the grids in a matrix, then analyzing it with NumPy, and finally makes guesses when no square is obviously safe.",
-      "Automated the solver with PyAutoGUI to automatically click on the most desirable grids.",
-      "Built a failsafe algorithm to output advanced logging and takes screenshots when failure occurs to simplify the debugging process.",
-      '<a href="https://github.com/plane-paper/YourSweeper" class="text-blue-300 hover:text-blue-200 underline">Click me for GitHub link</a>'
-    ]
+      "Built a screen detection algorithm that finds the Minesweeper window by matching a grayscale screenshot against a template with OpenCV, then computes the grid using contour tracing.",
+      "Developed a solver that records the grid's status in a matrix, analyzes it with NumPy to find safe squares, and makes guesses when no square is obviously safe.",
+      "Automated the solver with PyAutoGUI to click the most desirable squares.",
+      "Built a failsafe that outputs detailed logs and takes screenshots on failure to simplify debugging.",
+    ],
   },
+
   {
     title: "The Red Sun",
-    description: "A 2D game I developed individually in Python's library PyGame, in which the player must defeat the enemies and stop the sun from setting by using their power to turn back time.",
+    description:
+      "A 2D game I developed individually in Python's library PyGame, in which the player must defeat the enemies and stop the sun from setting by using their power to turn back time.",
     images: ["images/pic07.jpg", "images/pic08.jpg", "images/pic09.jpg", "images/pic10.jpg"],
-    details: [
-      "Developed frame-checked character physics & movement control, automated enemy movements & attacks, and real-time projectile (dagger) physics.",
-      "Included a unique method of battle & death penalty mechanism",
-      "Included a variety of enemy types and increasing difficulty of battle as the player progresses through the game.",
-      "Developed a rendering algorithm that allows the game's light rendering to change in colour & intensity as the sun sets in the background, which is a key mechanic of this game.",
-      "Included dynamic background & foreground movement, as well as aesthetically pleasing component physics (such as the train carts).",
-      "Conceptualized & Wrote a basic plot that adds to the interests of the player in the game.",
-      "Collaborated with a friend to draw the graphics used in this game.",
-      "...And many more features.",
-      '<a href="https://github.com/plane-paper/The-red-sun" class="text-blue-300 hover:text-blue-200 underline">Click me for GitHub link</a>'
-    ]
+    tech: ["Python", "Pygame"],
+    links: [{ label: "GitHub", href: "https://github.com/plane-paper/The-red-sun" }],
+    highlights: [
+      "Lighting shifts in color and intensity as the sun sets, driving the core mechanic",
+      "Multiple enemy types, with difficulty rising as you progress",
+      "Custom physics for characters, daggers, and train carts",
+    ],
+    sections: [
+      {
+        heading: "Gameplay systems",
+        points: [
+          "Frame-checked character physics and movement control, automated enemy movement and attacks, and real-time projectile (dagger) physics.",
+          "A unique method of battle and a death penalty mechanic.",
+          "A variety of enemy types, with battles getting harder as the player progresses through the game.",
+        ],
+      },
+      {
+        heading: "Visuals",
+        points: [
+          "A rendering algorithm changes the game's lighting in color and intensity as the sun sets in the background, which is a key mechanic.",
+          "Dynamic background and foreground movement, plus polished component physics such as the train carts.",
+          "Graphics drawn in collaboration with a friend.",
+        ],
+      },
+      {
+        heading: "Story and extras",
+        points: [
+          "Conceptualized and wrote a basic plot to keep players interested in the game.",
+          "...And many more features.",
+        ],
+      },
+    ],
   },
+
   {
     title: "Soil Moisture Sensor",
     images: ["images/pic11.jpg"],
     video: "images/performance.mp4",
-    details: [
-      "Completed a thorough engineering design process, including drafting a proposal, assessing need, writing a design document, completing revisions, and performing an implementation demo of the soil humidity sensor module.",
-      "Constructed a soil humidity module with 2 STM32 microcontrollers that inform the user whether a certain soil humidity is too low.",
-      "Implemented communication using the UART protocol between the STM 32 to transmit the soil humidity data.",
-      "Configured pins of the microcontrollers such that without using timer and PWM modules, a buzzer and 2 LEDs could be turned on and off according to the data received.",
-      "Configured the analogue-to-digital converter in the STM 32 to convert the voltage detected by the capacitance soil moisture sensor to a percentage data, which is compared against a user-set threshold.",
-      "Implemented, manually, in the sender module, a parity check by adding a parity bit at the end of the message, via the bit manipulation available in C++, without using the embedded parity function by STM.",
-      "Implemented another function to decode the message and check for data corruption by checking for even parity in the receiver module.",
-      "Without using IOC (STM32CubeMX) files in the STM32CubeIDE to generate code, manually initialized the microcontroller, UART peripherals, and configured pins by manually purely C coding, only possible through a robust understanding of microcontrollers.",
-      "Understood the underlying concepts between powering and unpowering pins on microcontrollers, as well as how signal sending and receiving works between embedded electrical components and microcontrollers.",
-      '<a href="https://github.com/lacser/ECE-198-Soil-Humidity-Project" class="text-blue-300 hover:text-blue-200 underline">Click me for GitHub link</a>'
-    ]
-  }
+    tech: ["C/C++", "STM32", "STM32CubeIDE", "UART", "ADC"],
+    links: [
+      {
+        label: "GitHub",
+        href: "https://github.com/lacser/ECE-198-Soil-Humidity-Project",
+      },
+    ],
+    highlights: [
+      "Two STM32 boards communicate over UART to flag soil that's too dry",
+      "Parity check implemented by hand with bit manipulation",
+      "Microcontroller and peripherals initialized manually, without CubeMX-generated code",
+    ],
+    sections: [
+      {
+        heading: "Design and hardware",
+        points: [
+          "Completed a full engineering design process: drafting a proposal, assessing need, writing a design document, completing revisions, and giving an implementation demo.",
+          "Constructed a soil humidity module with 2 STM32 microcontrollers that tell the user when soil humidity is too low.",
+          "Configured the analog-to-digital converter to turn the capacitive soil moisture sensor's voltage into a percentage, which is compared against a user-set threshold.",
+          "Configured pins so a buzzer and 2 LEDs switch on and off based on the received data, without using timer or PWM modules.",
+        ],
+      },
+      {
+        heading: "Communication and error checking",
+        points: [
+          "Implemented UART communication between the two STM32 boards to transmit the soil humidity data.",
+          "In the sender module, manually added a parity bit to the end of each message using C++ bit manipulation, instead of STM's embedded parity function.",
+          "In the receiver module, wrote a function to decode the message and check for even parity to detect data corruption.",
+        ],
+      },
+      {
+        heading: "Low-level firmware",
+        points: [
+          "Skipped IOC (STM32CubeMX) code generation in STM32CubeIDE and manually initialized the microcontroller, UART peripherals, and pins in pure C, which required a solid understanding of microcontrollers.",
+          "Understood the concepts behind powering and unpowering pins, and how signals are sent and received between embedded components and microcontrollers.",
+        ],
+      },
+    ],
+  },
 ];

@@ -83,10 +83,7 @@ const ContactContent = () => {
         Contact
       </h2>
       <p className="text-base md:text-base leading-7 text-white/90 mb-8">
-        The following information will be sent to my email at{' '}
-        <a href="mailto:r38su@uwaterloo.ca" className="text-blue-300 hover:text-blue-200 underline">
-          r38su@uwaterloo.ca
-        </a>.
+        This sends me an email using Resend!
       </p>
       
       <div className="space-y-6">
