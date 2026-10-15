@@ -34,14 +34,9 @@ const Portfolio = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [alphaFilter, setAlphaFilter] = useState('All');
 
-  // Loading screen effect
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1400);
-
-    return () => clearTimeout(timer);
-  }, []);
+  // NOTE: the old 1400ms loading timer was removed. The loading screen now
+  // ends itself: <LoadingScreen onComplete={...} /> below calls
+  // setIsLoading(false) once the signature has been written and erased.
 
   // Visitor count effect
   useEffect(() => {
