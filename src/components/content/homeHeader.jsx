@@ -71,12 +71,12 @@ const HomeHeader = ({ isLoading, onNavigate }) => {
       >
         <h1 className="text-3xl sm:text-4xl md:text-4xl font-light mb-5 uppercase tracking-wider">
           <Typewriter 
-            texts={["Hi, I am Richard Su", "A student and developer", "Good to see you!"]}
+            texts={["Hi, I am Richard Su", "Good to see you!"]}
             period={2000}
           />
         </h1>
         <p className="text-base md:text-base uppercase tracking-wider leading-8 text-white/90">
-          Hello / Bonjour / 你好 / Здравствуйте
+          Hello / Bonjour / 你好 / こんにちは
         </p>
       </motion.div>
 

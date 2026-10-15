@@ -10,24 +10,24 @@ const IntroContent = () => {
             <div className="mb-6 flex flex-col md:flex-row gap-6 items-start">
                 <div className="flex-1">
                     <p className="text-base md:text-base text-white/90 leading-8">
-                        Hello! I'm a passionate full-stack and software developer studying Electrical & Computer Engineering at the University of Waterloo, fostering hands-on experience with the co-op program, and academic success during my study terms.
+                        Hello! I'm a passionate full-stack and software developer studying Electrical & Computer Engineering at the University of Waterloo. 
                         <br />
-                        I love building impactful projects that leverage modern technologies to solve real-world problems! Check out my projects page for more information. I also frequently compete in hackathons and engineering competitions, winning multiple awards.
+                        I love building stuff! I work mostly with fullstack web dev, focusing on backend, infra, and some agent stuff. I can also do other things, like embedded, optimization, CICD, etc. Check out my projects page for more information. I also frequently compete in hackathons and engineering competitions, and I've won multiple awards.
                         <br />
-                        I have a multicultural background, having been raised in two countries during my childhood. This diverse upbringing has given me a unique perspective and adaptability in both technical and interpersonal contexts.
+                        I have a multicultural background, having been raised in two countries during my childhood. I'm also eager to learn! Currently, I can speak 3 languages (English and Mandarin fluently, French at a conversational level) and am actively learning Japanese and Cantonese.
                         <br />
-                        When I'm not studying or working, you may find me playing chess, gaming, writing, reading, debating, or cooking. I really wish I could cut my own hair, but reality often disappoints.
+                        When I'm not studying or working, you may find me playing chess, gaming, writing, or reading. I really wish I could cut my own hair, but reality often disappoints.
                     </p>
                 </div>
                 
                 <figure className="flex flex-col items-center w-full md:w-64 flex-shrink-0">
                     <img
-                        src="images/pic01.jpg"
-                        alt="Me going to the barber"
+                        src="images/pic01.png"
+                        alt="Me and Phoebe Chupi"
                         className="w-full rounded-lg shadow-lg border border-white/20"
                     />
                     <figcaption className="text-sm text-white/50 mt-3 italic text-center">
-                        The only time I went to the barber
+                        Me (first from left) and Phoebe Chupi (birthday gift from friend)
                     </figcaption>
                 </figure>
             </div>
