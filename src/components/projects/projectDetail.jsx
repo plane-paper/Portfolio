@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { X, ArrowUpRight, Play, ChevronLeft, ChevronRight } from 'lucide-react';
 
 /* ---------------------------------------------------------------------------
@@ -79,37 +79,56 @@ const Gallery = ({ title, images = [], video }) => {
     ...(video ? [{ type: 'video', src: video }] : []),
   ];
   const [active, setActive] = useState(0);
+  const [direction, setDirection] = useState(1);
   const [zoomed, setZoomed] = useState(null);
   const current = items[active] ?? items[0];
-  const showPrevious = () => setActive((index) => (index - 1 + items.length) % items.length);
-  const showNext = () => setActive((index) => (index + 1) % items.length);
+  const showPrevious = () => {
+    setDirection(-1);
+    setActive((index) => (index - 1 + items.length) % items.length);
+  };
+  const showNext = () => {
+    setDirection(1);
+    setActive((index) => (index + 1) % items.length);
+  };
 
   return (
     <div>
-      <div className="relative group w-fit max-w-full mx-auto">
-        {current.type === 'image' ? (
-          <button
-            type="button"
-            onClick={() => setZoomed(current.src)}
-            aria-label="View image full size"
-            className="block max-w-full rounded-lg cursor-zoom-in focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400"
+      <div className="relative group grid w-fit max-w-full mx-auto overflow-hidden rounded-lg">
+        <AnimatePresence mode="sync" initial={false} custom={direction}>
+          <motion.div
+            key={active}
+            custom={direction}
+            className="col-start-1 row-start-1"
+            initial={{ x: direction > 0 ? '100%' : '-100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: direction > 0 ? '-100%' : '100%' }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
           >
-            <img
-              src={current.src}
-              alt={`${title} ${active + 1}`}
-              className="block max-w-full max-h-[60vh] w-auto rounded-lg shadow-2xl"
-            />
-          </button>
-        ) : (
-          <video
-            key={current.src}
-            controls
-            className="block max-w-full max-h-[60vh] rounded-lg bg-black shadow-2xl"
-          >
-            <source src={current.src} type="video/mp4" />
-            Your browser does not support video.
-          </video>
-        )}
+            {current.type === 'image' ? (
+              <button
+                type="button"
+                onClick={() => setZoomed(current.src)}
+                aria-label="View image full size"
+                className="block max-w-full rounded-lg cursor-zoom-in focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400"
+              >
+                <img
+                  src={current.src}
+                  alt={`${title} ${active + 1}`}
+                  className="block max-w-full max-h-[60vh] w-auto rounded-lg shadow-2xl"
+                />
+              </button>
+            ) : (
+              <video
+                key={current.src}
+                controls
+                className="block max-w-full max-h-[60vh] rounded-lg bg-black shadow-2xl"
+              >
+                <source src={current.src} type="video/mp4" />
+                Your browser does not support video.
+              </video>
+            )}
+          </motion.div>
+        </AnimatePresence>
 
         {items.length > 1 && (
           <>
@@ -139,7 +158,12 @@ const Gallery = ({ title, images = [], video }) => {
             <button
               key={item.src}
               type="button"
-              onClick={() => setActive(index)}
+              onClick={() => {
+                if (index !== active) {
+                  setDirection(index < active ? -1 : 1);
+                  setActive(index);
+                }
+              }}
               aria-label={item.type === 'video' ? 'Play demo video' : `Show image ${index + 1}`}
               aria-current={index === active}
               className={`relative w-20 h-14 rounded-md overflow-hidden bg-white/10 transition-opacity focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400 ${
@@ -232,7 +256,7 @@ const ProjectDetail = ({ project, isClosing, onClose, onCloseComplete }) => {
           </div>
 
           {project.description && (
-            <p className="mt-4 max-w-3xl text-white/90 text-lg leading-relaxed">
+            <p className="mt-4 text-white/90 text-lg leading-relaxed">
               {project.description}
             </p>
           )}
