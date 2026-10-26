@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X, ArrowUpRight, Play, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -81,6 +81,8 @@ const Gallery = ({ title, images = [], video }) => {
   const [active, setActive] = useState(0);
   const [direction, setDirection] = useState(1);
   const [zoomed, setZoomed] = useState(null);
+  const touchStart = useRef(null);
+  const suppressClick = useRef(false);
   const current = items[active] ?? items[0];
   const showPrevious = () => {
     setDirection(-1);
@@ -93,7 +95,38 @@ const Gallery = ({ title, images = [], video }) => {
 
   return (
     <div>
-      <div className="relative group grid w-fit max-w-full mx-auto overflow-hidden rounded-lg">
+      <div
+        className="relative group grid w-fit max-w-full mx-auto overflow-hidden rounded-lg"
+        style={{ touchAction: 'pan-y pinch-zoom' }}
+        onTouchStart={(event) => {
+          suppressClick.current = false;
+          touchStart.current = event.touches.length === 1
+            ? { x: event.touches[0].clientX, y: event.touches[0].clientY }
+            : null;
+        }}
+        onTouchEnd={(event) => {
+          const start = touchStart.current;
+          touchStart.current = null;
+          if (!start || items.length < 2 || event.touches.length > 0) return;
+
+          const deltaX = event.changedTouches[0].clientX - start.x;
+          const deltaY = event.changedTouches[0].clientY - start.y;
+          if (Math.abs(deltaX) < 40 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
+
+          // A swipe must not also open the image or activate an arrow.
+          suppressClick.current = true;
+          if (deltaX < 0) showNext();
+          else showPrevious();
+        }}
+        onTouchCancel={() => { touchStart.current = null; }}
+        onClickCapture={(event) => {
+          if (suppressClick.current) {
+            event.preventDefault();
+            event.stopPropagation();
+            suppressClick.current = false;
+          }
+        }}
+      >
         <AnimatePresence mode="sync" initial={false} custom={direction}>
           <motion.div
             key={active}
