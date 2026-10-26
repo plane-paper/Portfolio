@@ -3,7 +3,12 @@ const ResumeContent = () => (
     <h2 className="text-2xl font-semibold uppercase tracking-wide mb-6 text-white border-b border-white pb-2">
       Resume
     </h2>
-    <div className="bg-white rounded-lg p-4 shadow-2xl">
+    <div className="md:hidden rounded-lg border border-white/20 bg-white/5 p-5">
+      <p className="text-lg font-semibold">Richard Su — Resume</p>
+      <p className="mt-2 text-base leading-7 text-white/80">Open the PDF for a full-screen view you can zoom and read on your phone.</p>
+      <a href="Ruiquan_Richard_Su_Resume.pdf" target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex min-h-11 items-center rounded bg-white px-5 py-3 font-semibold text-gray-900">Open resume PDF</a>
+    </div>
+    <div className="hidden md:block bg-white rounded-lg p-4 shadow-2xl">
       <iframe 
         src="Ruiquan_Richard_Su_Resume.pdf#toolbar=1&navpanes=0&scrollbar=1" 
         className="w-full h-[600px] md:h-[800px] rounded"

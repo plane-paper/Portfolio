@@ -24,7 +24,7 @@ function AccordionTrigger({ className, children, ...props }) {
     <AccordionPrimitive.Header className="flex">
       <AccordionPrimitive.Trigger
         className={cn(
-          "flex flex-1 items-start justify-between gap-4 rounded-md py-4 text-left text-sm font-medium transition-all outline-none hover:underline",
+          "flex flex-1 items-start justify-between gap-4 rounded-md py-4 text-left text-base md:text-sm font-medium transition-all outline-none focus-visible:ring-2 focus-visible:ring-blue-400 hover:underline",
           "[&[data-state=open]>svg]:rotate-180",
           className
         )}
@@ -41,7 +41,7 @@ function AccordionContent({ className, children, ...props }) {
   return (
     <AccordionPrimitive.Content
       className={cn(
-        "overflow-hidden text-sm",
+        "overflow-hidden text-base leading-7 md:text-sm md:leading-relaxed",
         "data-[state=open]:animate-accordion-down",
         "data-[state=closed]:animate-accordion-up"
       )}

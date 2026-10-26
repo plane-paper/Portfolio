@@ -7,7 +7,7 @@ const HomeHeader = ({ isLoading, animateEntrance, onNavigate }) => {
       initial={animateEntrance ? "hidden" : false}
       animate={isLoading && animateEntrance ? "hidden" : "visible"}
       exit="exit"
-      className="w-full flex-1 flex flex-col items-center justify-center text-center"
+      className="w-full flex-1 flex flex-col items-center justify-center text-center py-6 sm:py-0"
     >
       <motion.div
         variants={{
@@ -62,9 +62,9 @@ const HomeHeader = ({ isLoading, animateEntrance, onNavigate }) => {
             transition: { duration: 0.3 }
           }
         }}
-        className="border-t border-b border-white py-8 mb-8 max-w-2xl"
+        className="w-full border-t border-b border-white py-6 sm:py-8 mb-8 max-w-2xl"
       >
-        <h1 className="text-3xl sm:text-4xl md:text-4xl font-light mb-5 uppercase tracking-wider">
+        <h1 className="min-h-[2.5em] sm:min-h-0 text-3xl sm:text-4xl md:text-4xl font-light mb-5 uppercase tracking-wide sm:tracking-wider">
           <Typewriter 
             texts={["Hi, I am Richard Su", "Good to see you!"]}
             period={2000}
@@ -98,7 +98,8 @@ const HomeHeader = ({ isLoading, animateEntrance, onNavigate }) => {
             transition: { duration: 0.4 }
           }
         }}
-        className="border border-white rounded inline-flex overflow-hidden"
+        aria-label="Explore portfolio"
+        className="home-navigation w-full max-w-sm sm:w-auto sm:max-w-none border border-white rounded-lg sm:rounded grid grid-cols-2 sm:inline-flex overflow-hidden"
       >
         {['intro', 'work', 'about', 'contact'].map((item, idx, arr) => (
           <motion.button
@@ -116,7 +117,7 @@ const HomeHeader = ({ isLoading, animateEntrance, onNavigate }) => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => onNavigate(item)}
-            className={`px-3 sm:px-4 md:px-6 py-4 text-sm md:text-sm uppercase tracking-wider hover:bg-white/10 transition-all duration-300 ${
+            className={`px-3 sm:px-4 md:px-6 py-4 text-base sm:text-sm uppercase tracking-wider hover:bg-white/10 transition-all duration-300 ${
               idx < arr.length - 1 ? 'border-r border-white' : ''
             }`}
           >

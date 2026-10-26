@@ -8,6 +8,8 @@ const ProjectFilters = ({ searchQuery, onSearchChange, alphaFilter, onAlphaChang
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Search projects or keywords..."
+          aria-label="Search projects or keywords"
+          type="search"
           className="w-full md:w-2/3 px-4 py-3 bg-transparent border border-white rounded text-white placeholder-white/50 focus:outline-none"
         />
         <button
@@ -18,12 +20,13 @@ const ProjectFilters = ({ searchQuery, onSearchChange, alphaFilter, onAlphaChang
         </button>
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex md:flex-wrap gap-2 overflow-x-auto pb-2" aria-label="Filter projects by first letter">
         {alphabet.map(letter => (
           <button
             key={letter}
             onClick={() => onAlphaChange(letter)}
-            className={`px-2 py-1 text-sm rounded ${
+            aria-pressed={alphaFilter === letter}
+            className={`min-w-11 min-h-11 flex-shrink-0 px-2 py-1 text-base md:text-sm rounded ${
               alphaFilter === letter ? 'bg-white/20' : 'bg-white/5 hover:bg-white/10'
             }`}
           >

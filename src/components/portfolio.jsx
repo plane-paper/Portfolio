@@ -33,6 +33,18 @@ const Portfolio = () => {
   const [hasOpenedSection, setHasOpenedSection] = useState(false);
   const [visitorCount, setVisitorCount] = useState(0);
   const hasStartedPreloading = useRef(false);
+  const articleRef = useRef(null);
+
+  useEffect(() => {
+    if (!isArticleVisible) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = previousOverflow; };
+  }, [isArticleVisible]);
+
+  useEffect(() => {
+    articleRef.current?.scrollTo?.(0, 0);
+  }, [currentView, selectedProject]);
 
   // Project navigation helpers
   const [searchQuery, setSearchQuery] = useState('');
@@ -94,6 +106,7 @@ const Portfolio = () => {
     
     setCurrentView(view);
     setSelectedProject(null);
+    setIsProjectClosing(false);
   };
 
   const handleClose = () => {
@@ -116,6 +129,7 @@ const Portfolio = () => {
   };
 
   const handleBorderClick = () => {
+    if (window.matchMedia('(max-width: 767px), (pointer: coarse)').matches) return;
     if (currentView === 'contact') return;
 
     if (currentView === 'work' && selectedProject !== null) {
@@ -151,7 +165,7 @@ const Portfolio = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: isProjectClosing ? 0 : 1 }}
                 transition={{ duration: 0.5, ease: "easeInOut" }}
-                className="w-24 bg-gray-900/50 backdrop-blur-sm border-r border-white/20 p-4 overflow-y-auto flex-shrink-0 overflow-x-hidden no-scrollbar"
+                className="hidden md:block w-24 bg-gray-900/50 backdrop-blur-sm border-r border-white/20 p-4 overflow-y-auto flex-shrink-0 overflow-x-hidden no-scrollbar"
               >
                 {projects.map((project, index) => (
                   <ProjectTile 
@@ -165,7 +179,7 @@ const Portfolio = () => {
                 ))}
               </motion.div>
               
-              <div className="flex-1 overflow-hidden">
+              <div className="flex-1 min-w-0 overflow-hidden">
                 <ProjectDetail 
                   project={projects[selectedProject]} 
                   isClosing={isProjectClosing}
@@ -235,7 +249,7 @@ const Portfolio = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: isLoading ? 0 : 1 }}
         transition={{ duration: 1, delay: 0.5 }}
-        className="min-h-screen text-white relative overflow-hidden"
+        className="portfolio min-h-screen text-white relative overflow-hidden"
         style={{ fontFamily: "'Source Sans Pro', sans-serif" }}
       >
         {/* Top Navigation */}
@@ -268,7 +282,7 @@ const Portfolio = () => {
         )}
         
         {/* Main Content */}
-        <div className="relative z-10 min-h-screen flex flex-col items-center justify-between p-5 sm:p-8 md:p-16">
+        <div className="portfolio-shell relative z-10 min-h-screen flex flex-col items-center justify-between p-5 sm:p-8 md:p-16">
           
           {/* Home Header */}
           <AnimatePresence>
@@ -285,18 +299,18 @@ const Portfolio = () => {
           <AnimatePresence mode="wait">
             {isArticleVisible && (
               <motion.article
+                ref={articleRef}
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 50 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
-                className="fixed inset-0 bg-gray-900/95 backdrop-blur-sm overflow-y-auto no-scrollbar"
-                style={{ paddingTop: 'clamp(68px, 10vh, 80px)' }}
+                className="portfolio-article fixed inset-0 bg-gray-900/95 backdrop-blur-sm overflow-y-auto no-scrollbar"
                 onClick={(e) => {
                   if (e.target === e.currentTarget) handleBorderClick();
                 }}
               >
                 {currentView !== 'work' || selectedProject === null ? (
-                  <div className="container mx-auto px-5 sm:px-8 md:px-12 py-8 sm:py-12 max-w-4xl no-scrollbar min-h-full">
+                  <div className="container mx-auto px-5 sm:px-8 md:px-12 py-6 sm:py-12 max-w-4xl no-scrollbar min-h-full">
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={currentView}

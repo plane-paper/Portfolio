@@ -186,7 +186,7 @@ const Gallery = ({ title, images = [], video }) => {
       </div>
 
       {items.length > 1 && (
-        <div className="flex flex-wrap justify-center gap-2 mt-4">
+        <div className="flex sm:flex-wrap sm:justify-center gap-3 mt-4 overflow-x-auto p-1" aria-label="Media thumbnails">
           {items.map((item, index) => (
             <button
               key={item.src}
@@ -199,7 +199,7 @@ const Gallery = ({ title, images = [], video }) => {
               }}
               aria-label={item.type === 'video' ? 'Play demo video' : `Show image ${index + 1}`}
               aria-current={index === active}
-              className={`relative w-20 h-14 rounded-md overflow-hidden bg-white/10 transition-opacity focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400 ${
+              className={`relative flex-shrink-0 w-20 h-14 rounded-md overflow-hidden bg-white/10 transition-opacity focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400 ${
                 index === active ? 'ring-2 ring-blue-400' : 'opacity-60 hover:opacity-100'
               }`}
             >
@@ -267,22 +267,27 @@ const ProjectDetail = ({ project, isClosing, onClose, onCloseComplete }) => {
       onAnimationComplete={() => {
         if (isClosing) onCloseComplete();
       }}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-      className="h-full p-6 sm:p-8 overflow-y-auto no-scrollbar"
+      className="h-full p-5 sm:p-8 overflow-y-auto overscroll-contain no-scrollbar"
     >
       <div className="max-w-6xl mx-auto pb-8">
+        <button
+          type="button"
+          onClick={onClose}
+          className="mb-5 flex min-h-11 items-center gap-2 rounded-lg bg-white/10 px-4 text-base md:hidden"
+        >
+          <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+          All projects
+        </button>
         {/* Header */}
         <header className="mb-8">
           <div className="flex justify-between items-start gap-4">
-            <h2 className="text-3xl font-bold text-white uppercase tracking-wide">
+            <h2 className="min-w-0 break-words text-2xl sm:text-3xl font-bold text-white uppercase tracking-wide">
               {project.title}
             </h2>
             <button
               onClick={onClose}
-              aria-label="Close project details"
-              className="w-10 h-10 flex-shrink-0 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400"
+              aria-label="Back to all projects"
+              className="hidden md:flex w-11 h-11 flex-shrink-0 rounded-full bg-white/10 hover:bg-white/20 items-center justify-center transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400"
             >
               <X className="w-5 h-5 text-white" />
             </button>
@@ -353,7 +358,7 @@ const ProjectDetail = ({ project, isClosing, onClose, onCloseComplete }) => {
         )}
 
         {/* Details: one panel, flowing into two columns on desktop */}
-        <div className="mt-8 bg-white/5 rounded-lg p-6 md:p-8 backdrop-blur-sm">
+        <div className="mt-8 bg-white/5 rounded-lg p-4 sm:p-6 md:p-8 backdrop-blur-sm">
           {hasSections ? (
             <div className="md:columns-2 md:gap-x-12">
               {project.sections.map((section) => (

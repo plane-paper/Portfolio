@@ -5,7 +5,10 @@ const ProjectTile = ({ project, index, onProjectSelect, isCompact, isSelected = 
 
   if (isCompact) {
     return (
-      <div 
+      <button
+        type="button"
+        aria-label={`View ${project.title}`}
+        aria-pressed={isSelected}
         className={`w-16 h-16 rounded-lg cursor-pointer transition-all duration-300 flex items-center justify-center mb-4 group ${
           isSelected 
             ? 'bg-white/30 border-2 border-white shadow-lg' 
@@ -18,33 +21,34 @@ const ProjectTile = ({ project, index, onProjectSelect, isCompact, isSelected = 
         }`}>
           {project.title[0]}
         </span>
-      </div>
+      </button>
     );
   }
 
   return (
-    <div 
-      className="bg-white/10 hover:bg-white/15 rounded-lg p-6 cursor-pointer transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl"
+    <button
+      type="button"
+      className="w-full min-w-0 bg-white/10 hover:bg-white/15 rounded-lg p-4 sm:p-6 cursor-pointer transition-all duration-300 transform md:hover:scale-[1.02] hover:shadow-2xl"
       onClick={handleTileClick}
     >
-      <h4 className="text-center py-4 m-0 text-white font-semibold uppercase tracking-wide text-lg">
+      <span className="block text-center py-3 m-0 text-white font-semibold uppercase tracking-wide text-xl sm:text-lg break-words">
         {project.title}
-      </h4>
+      </span>
       
       {project.images && project.images.length > 0 && (
-        <div className="w-full h-48 overflow-hidden rounded-lg mt-4">
+        <span className="block w-full aspect-video sm:aspect-auto sm:h-48 overflow-hidden rounded-lg mt-3">
           <img 
             src={project.images[0]} 
             alt={project.title} 
             className="w-full h-full object-cover transition-transform duration-300 hover:scale-105" 
           />
-        </div>
+        </span>
       )}
       
-      <p className="text-white/80 mt-4 text-center">
-        Click to view details → 
-      </p>
-    </div>
+      <span className="block text-white/80 mt-4 text-center">
+        View project details →
+      </span>
+    </button>
   );
 };
 
